@@ -10,6 +10,7 @@ engine = create_engine(
 
 LocalSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 def get_db():
     """
     access db with generator

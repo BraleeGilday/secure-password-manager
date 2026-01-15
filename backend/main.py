@@ -7,7 +7,8 @@ app = FastAPI()
 
 # backend address + port (change to https?)
 # need to add frontend address (localhost:<different port>)
-# will need to see how to redo for cloud deployment (as simple as containerize + nginx?)
+# will need to see how to redo for cloud deployment
+# (as simple as containerize + nginx?)
 origins = [
     "http://localhost:8000",
 ]
@@ -21,6 +22,7 @@ app.add_middleware(
 )
 
 # app.include_router(routers, tags[]) go here 
+
 
 # to be removed
 @app.get("/")
