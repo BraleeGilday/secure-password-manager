@@ -22,6 +22,7 @@ class User(Base):
     password = Column(String, nullable=False)
     # date created? modified?
     # log in attempts?
+    # admin ?
 
 
 class Account(Base):
