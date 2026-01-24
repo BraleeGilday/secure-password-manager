@@ -6,6 +6,9 @@ from sqlalchemy import (
 
 from sqlalchemy.orm import DeclarativeBase, relationship
 
+# Daniel's extra UUID import (added to both User and Credential classes for generating unique string IDs)
+import uuid
+
 
 class Base(DeclarativeBase):
     pass
@@ -17,7 +20,7 @@ class User(Base):
     """
 
     __tablename__ = "user"
-    id = Column(String, primary_key=True)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     username = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
@@ -32,7 +35,7 @@ class Credential(Base):
     """
 
     __tablename__ = "credential"
-    id = Column(String, primary_key=True)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     username = Column(String, nullable=False)
     password = Column(String, nullable=False)
     site = Column(String, nullable=False)
