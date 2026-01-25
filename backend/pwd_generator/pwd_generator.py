@@ -2,55 +2,73 @@ import random
 
 
 def generate_password(
-        length=16, 
-        has_symbols=True, 
-        has_numbers=True, 
-        mixed_case=True
+        length: int = 16,
+        has_symbols: bool = True,
+        has_numbers: bool = True,
+        mixed_case: bool = True
 ) -> str:
     """
-    Generates a randomized password based on flags passed by user
+    Generates a randomized string based on flags passed by user
     length = 16 (default)
-    has_symbols = include symbols 
-    has_numbers = include digits 
-    mixed_case = include upper and lower roman english letters
+    has_symbols = include symbols (default)
+    has_numbers = include digits (default)
+    mixed_case = include upper and lower roman english letters (default)
     """
-
-    # should split into upper and lower and require at least 1 char each?
-    alphabet = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm"
-    symbols = ""
-    numbers = ""
-    
-    total_symbols, total_numbers = 0, 0
-
-    if has_symbols:
-        max_symbols = length // 4
-        total_symbols = random.randint(1, max_symbols)
-        symbols = "~!@#$%^&*()-_+=,.?:;"
-    if has_numbers:
-        max_numbers = length // 4
-        total_numbers = random.randint(1, max_numbers)
-        numbers = "1234567890"
-    
-    if not mixed_case:
-        alphabet = "qwertyuiopasdfghjklzxcvbnm"
-    
-    total_letters = length - total_symbols - total_numbers
+    (alphabet, symbols, numbers,
+     total_symbols, total_numbers, total_letters
+     ) = create_alphabet(
+         length,
+         has_symbols,
+         has_numbers,
+         mixed_case
+        )
 
     return create_password(
-        length, symbols, numbers, 
-        alphabet, total_symbols, total_numbers, 
+        length, symbols, numbers,
+        alphabet, total_symbols, total_numbers,
         total_letters,
     )
 
 
-def create_alphabet():
-    pass
+def create_alphabet(
+        length: int,
+        has_symbols: bool,
+        has_numbers: bool,
+        mixed_case: bool
+        ) -> tuple[str, str, str, int, int, int]:
+    """
+    Create the alphabet for the password generator
+    """
+    # should split into upper and lower and require at least 1 char each?
+    alphabet = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm"
+    symbols = ""
+    numbers = ""
+
+    total_symbols, total_numbers = 0, 0
+    # at least 1, at most (length of pwd / 4) digits or symbols
+    max_special_chars = length // 4
+
+    if has_symbols:
+        total_symbols = random.randint(1, max_special_chars)
+        symbols = "~!@#$%^&*()-_+=,.?:;"
+
+    if has_numbers:
+        total_numbers = random.randint(1, max_special_chars)
+        numbers = "1234567890"
+
+    if not mixed_case:
+        alphabet = "qwertyuiopasdfghjklzxcvbnm"
+
+    total_letters = length - total_symbols - total_numbers
+
+    return (alphabet, symbols, numbers,
+            total_symbols, total_numbers, total_letters)
 
 
 def create_password(
-        length: int, 
-        symbols: str, 
-        numbers: str, 
+        length: int,
+        symbols: str,
+        numbers: str,
         alphabet: str,
         total_symbols: int,
         total_numbers: int,
