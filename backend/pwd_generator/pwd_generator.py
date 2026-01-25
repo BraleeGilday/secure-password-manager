@@ -103,7 +103,7 @@ def evaluate_strength(
         lowers: int
         ) -> str:
     """
-    Return strength rating of password
+    Return strength rating of password (does not acct for common words)
     """
     guidelines = {0: "very weak", 1: "weak", 2: "medium-weak",
                   3: "medium", 4: "strong", 5: "very strong"}
