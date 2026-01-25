@@ -17,12 +17,12 @@ def test_numbers():
 
 @pytest.fixture
 def test_mixed_case():
-    return "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm"
+    return "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
 
 @pytest.fixture
 def test_single_case():
-    return "qwertyuiopasdfghjklzxcvbnm"
+    return "abcdefghijklmnopqrstuvwxyz"
 
 
 def count_characters(pwd, test_symbols):

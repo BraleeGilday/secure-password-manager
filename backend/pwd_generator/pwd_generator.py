@@ -40,7 +40,7 @@ def create_alphabet(
     Create the alphabet for the password generator
     """
     # should split into upper and lower and require at least 1 char each?
-    alphabet = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm"
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     symbols = ""
     numbers = ""
 
@@ -57,7 +57,7 @@ def create_alphabet(
         numbers = "1234567890"
 
     if not mixed_case:
-        alphabet = "qwertyuiopasdfghjklzxcvbnm"
+        alphabet = "abcdefghijklmnopqrstuvwxyz"
 
     total_letters = length - total_symbols - total_numbers
 
