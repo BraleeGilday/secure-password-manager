@@ -22,7 +22,7 @@ app.add_middleware(
 )
 
 # app.include_router(routers, tags[]) go here
-app.include_router(pwd_gen_router.router, tags="Password")
+app.include_router(pwd_gen_router.router, tags=["Password"])
 
 
 # to be removed
