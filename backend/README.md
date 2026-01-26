@@ -38,7 +38,7 @@
 
 - Generate and apply migrations:
     ```
-    alembic revision -autogenerate
+    alembic revision --autogenerate
     alembic upgrade head
     ```
 
