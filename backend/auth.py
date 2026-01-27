@@ -8,7 +8,7 @@ from jwt.exceptions import InvalidTokenError
 # from pwdlib import PasswordHash
 from pydantic import BaseModel
 from starlette.config import Config
-from sqlalchemy import Session
+from sqlalchemy.orm import Session
 
 from database import get_db
 
@@ -52,7 +52,7 @@ async def get_current_user(
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
+        detail="Could not validate credential",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:

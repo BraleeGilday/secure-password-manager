@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from user.user_router import router as user_router
+from credential.credential_router import router as credential_router
+
 # https://fastapi.tiangolo.com/tutorial/cors/#use-corsmiddleware
 
 app = FastAPI()
@@ -22,7 +25,8 @@ app.add_middleware(
 )
 
 # app.include_router(routers, tags[]) go here
-
+app.include_router(user_router)
+app.include_router(credential_router)
 
 # to be removed
 @app.get("/")

@@ -6,7 +6,7 @@ from sqlalchemy import (
 
 from sqlalchemy.orm import DeclarativeBase, relationship
 
-# Daniel's extra UUID import (added to both User and Credential classes for generating unique string IDs)
+# UUID import (added to both User and Credential classes for generating unique string IDs)
 import uuid
 
 
@@ -36,9 +36,9 @@ class Credential(Base):
 
     __tablename__ = "credential"
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    site = Column(String, nullable=False)
     username = Column(String, nullable=False)
     password = Column(String, nullable=False)
-    site = Column(String, nullable=False)
     notes = Column(String, nullable=True)
     # maybe set enc_key to True for beginning?
     # encryption_key = Column(
