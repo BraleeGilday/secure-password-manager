@@ -5,6 +5,11 @@
     openssl rand -hex 32
     ```
 
+- generate encryption key for .env:
+    ```
+    python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+    ```
+
 - navigate to backend:
     ```
     cd backend
