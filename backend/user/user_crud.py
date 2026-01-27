@@ -9,14 +9,15 @@ from user.user_schema import UserCreate, UserUpdate
 
 password_hash = PasswordHash.recommended()  # may be replaced
 
+
 def generate_unique_username(db: Session, email: str) -> str:
     username_base = email.split("@", 1)[0]
     username_candidate = username_base
 
     n = 1
     while db.query(User).filter(User.username == username_candidate).first():
-            n += 1
-            username_candidate = f"{username_base}{n}"
+        n += 1
+        username_candidate = f"{username_base}{n}"
     return username_candidate
 
 
@@ -44,18 +45,16 @@ def create_user(db: Session, create_user: UserCreate) -> User:
     return new_user
 
 
-def update_user(
-        db: Session, 
-        update_user: UserUpdate,
-        current_user: User
-) -> User:
+def update_user(db: Session, update_user: UserUpdate, current_user: User) -> User:
     """
     update user (email and/or password only)
     """
     user = get_user_by_id(db, current_user.id)
     if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
     if update_user.email is not None:
         user.email = update_user.email
 
@@ -70,7 +69,7 @@ def update_user(
             status_code=status.HTTP_409_CONFLICT,
             detail="Email or username already registered",
         )
-    
+
     db.refresh(user)
     return user
 

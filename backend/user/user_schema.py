@@ -7,7 +7,7 @@ class UserCreate(BaseModel):
     password: str
 
     @field_validator("password")
-    def not_empty(cls, v: str) -> str: 
+    def not_empty(cls, v: str) -> str:
         if not v or not v.strip():
             raise ValueError("Required field!")
         return v

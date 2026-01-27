@@ -1,4 +1,4 @@
-import jwt 
+import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import PyJWTError
@@ -17,9 +17,9 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(config("TIMEOUT", default=1))
 router = APIRouter(prefix="/spm/user")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/spm/user/login")
 
+
 async def get_current_user(
-        token: str = Depends(oauth2_scheme),
-        db: Session = Depends(get_db)
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -34,7 +34,7 @@ async def get_current_user(
         # token = Token(username=username)
     except PyJWTError:
         raise credentials_exception
-    
+
     user = get_user_by_username(db=db, username=username)
     if user is None:
         raise credentials_exception

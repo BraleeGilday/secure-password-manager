@@ -1,13 +1,12 @@
 from fastapi import (
-    APIRouter, 
+    APIRouter,
     HTTPException,
     Depends,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 
-from sqlalchemy.orm import (
-    Session,
-)
+from sqlalchemy.orm import Session
+
 from starlette import status
 from starlette.config import Config
 from datetime import timedelta
@@ -19,7 +18,7 @@ from user.user_crud import (
     delete_user,
     get_user_by_id,
     get_user_by_username,
-    password_hash
+    password_hash,
 )
 from user.user_auth import get_current_user
 
@@ -43,6 +42,7 @@ router = APIRouter(prefix="/spm/user")
 
 ACCESS_TOKEN_EXPIRE_MINUTES = int(config("TIMEOUT", default=1))
 
+
 @router.post("/register")
 def register_user(
     user_create: UserCreate,
@@ -64,7 +64,7 @@ def login_for_access_token(
     db: Session = Depends(get_db),
 ) -> Token:
     user = get_user_by_username(db, form_data.username)
-    if not user or not password_hash.verify(form_data.password, user.password): 
+    if not user or not password_hash.verify(form_data.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password",
@@ -74,11 +74,7 @@ def login_for_access_token(
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    return Token(
-        access_token=access_token, 
-        token_type="bearer", 
-        username=user.username
-    )
+    return Token(access_token=access_token, token_type="bearer", username=user.username)
 
 
 # Read "my user"
@@ -132,7 +128,7 @@ def delete_user_route(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to delete this user",
         )
-    
+
     user = get_user_by_id(db, user_id)
     if user is None:
         raise HTTPException(

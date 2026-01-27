@@ -7,7 +7,6 @@ from alembic import context
 
 import models
 
-
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -27,6 +26,9 @@ target_metadata = models.Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+SECRET_KEY = "dev-secret-key-change-me"
+TIMEOUT = 30
 
 
 def run_migrations_offline() -> None:
@@ -67,9 +69,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
