@@ -1,4 +1,4 @@
-from backend.test_app.fixtures.user_fixtures import registered_user, user_token
+from test_app.fixtures.user_fixtures import registered_user, user_token
 
 import uuid
 
