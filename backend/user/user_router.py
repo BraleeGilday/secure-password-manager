@@ -17,7 +17,7 @@ from user.user_crud import (
     update_user,
     delete_user,
     get_user_by_id,
-    get_user_by_username,
+    get_user_by_email,
     password_hash,
 )
 from user.user_auth import get_current_user
@@ -37,12 +37,14 @@ from auth import (
     create_access_token,
 )
 
-config = Config(".env")
 router = APIRouter(prefix="/spm/user")
+config = Config(".env")
 
 ACCESS_TOKEN_EXPIRE_MINUTES = int(config("TIMEOUT", default=1))
+MAX_LOGIN_ATTEMPTS = 4
 
 
+# CREATE
 @router.post("/register")
 def register_user(
     user_create: UserCreate,
@@ -53,8 +55,8 @@ def register_user(
     return UserResponse(
         id=new_user.id,
         email=new_user.email,
-        username=new_user.username,
-        # Not returning hashed password (unsafe)
+        display_name=new_user.display_name,
+        created_at=new_user.created_at,
     )
 
 
@@ -63,22 +65,46 @@ def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ) -> Token:
-    user = get_user_by_username(db, form_data.username)
-    if not user or not password_hash.verify(form_data.password, user.password):
+    user = get_user_by_email(
+        db, form_data.username
+    )  # for a user, email *is* the username
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid username or password",
+            detail="Invalid email",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+    # Too many failed attempts
+    if user.login_attempts >= MAX_LOGIN_ATTEMPTS:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            headers={"WWW-Authenticate": "Bearer"},
+            detail="Account locked. Too many failed login attempts.",
+        )
+
+    # Incorrect password
+    if not password_hash.verify(form_data.password, user.password):
+        user.login_attempts += 1
+        db.commit()
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Correct password
+    user.login_attempts = 0
+    db.commit()
+
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.email}, expires_delta=access_token_expires
     )
-    return Token(access_token=access_token, token_type="bearer", username=user.username)
+    return Token(access_token=access_token, token_type="bearer", username=user.email)
 
 
-# Read "my user"
-# GET /spm/{user_id}
+# READ
 @router.get("/{user_id}", response_model=UserResponse)
 def read_user_route(
     user_id: str,
@@ -98,9 +124,8 @@ def read_user_route(
     return user
 
 
-# update "my_user"
-# PATCH /spm/{user_id}
-@router.patch("/{user_id}", response_model=UserResponse)
+# UPDATE
+@router.put("/{user_id}", response_model=UserResponse)
 def update_user_route(
     user_id: str,
     user_update: UserUpdate,
@@ -113,10 +138,15 @@ def update_user_route(
             detail="Not authorized to update this user",
         )
 
-    updated = update_user(db=db, update_user=user_update, current_user=current_user)
+    updated = update_user(
+        db=db,
+        update_user=user_update,
+        current_user=current_user,
+    )
     return updated
 
 
+# DELETE
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user_route(
     user_id: str,

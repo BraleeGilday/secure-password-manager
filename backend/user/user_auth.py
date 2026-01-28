@@ -4,14 +4,10 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import PyJWTError
 from sqlalchemy.orm import Session
 from auth import SECRET_KEY, ALGORITHM
-from starlette.config import Config
 
-from user.user_crud import get_user_by_username
+from user.user_crud import get_user_by_email
 
 from database import get_db
-
-config = Config(".env")
-# ACCESS_TOKEN_EXPIRE_MINUTES = int(config("TIMEOUT", default=1))
 
 router = APIRouter(prefix="/spm/user")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/spm/user/login")
@@ -27,14 +23,14 @@ async def get_current_user(
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username = payload.get("sub")
-        if username is None:
+        email = payload.get("sub")
+        if email is None:
             raise credentials_exception
         # token = Token(username=username)
     except PyJWTError:
         raise credentials_exception
 
-    user = get_user_by_username(db=db, username=username)
+    user = get_user_by_email(db=db, email=email)
     if user is None:
         raise credentials_exception
     return user

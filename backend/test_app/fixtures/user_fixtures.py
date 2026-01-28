@@ -11,7 +11,8 @@ def registered_user(client):
     """
     suffix = uuid.uuid4().hex[:8]
     email = f"testuser_{suffix}@example.com"
-    password = "testpassword"
+    password = "testpassword123!"
+    # no display_name, so email prefix should be used by default
 
     response = client.post(
         "/spm/user/register", json={"email": email, "password": password}
@@ -19,10 +20,12 @@ def registered_user(client):
     assert response.status_code == 200, response.text
 
     data = response.json()
+    assert data["display_name"] == email.split("@")[0]
+
     return {
         "id": data["id"],
         "email": data["email"],
-        "username": data["username"],
+        "display_name": data["display_name"],
         "password": password,  # plaintext for login
     }
 
@@ -35,7 +38,7 @@ def user_token(client, registered_user):
     response = client.post(
         "/spm/user/login",
         data={
-            "username": registered_user["username"],
+            "username": registered_user["email"],
             "password": registered_user["password"],
         },
     )

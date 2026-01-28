@@ -10,26 +10,20 @@ from user.user_schema import UserCreate, UserUpdate
 password_hash = PasswordHash.recommended()  # may be replaced
 
 
-def generate_unique_username(db: Session, email: str) -> str:
-    username_base = email.split("@", 1)[0]
-    username_candidate = username_base
-
-    n = 1
-    while db.query(User).filter(User.username == username_candidate).first():
-        n += 1
-        username_candidate = f"{username_base}{n}"
-    return username_candidate
-
-
 def create_user(db: Session, create_user: UserCreate) -> User:
     """
     create new user
     """
+    name = create_user.display_name
+    if name is None or not name.strip():
+        name = create_user.email.split("@", 1)[0]
+
     new_user = User(
         id=str(uuid.uuid4()),
         email=create_user.email,
-        username=generate_unique_username(db, create_user.email),
         password=password_hash.hash(create_user.password),
+        display_name=name,
+        login_attempts=0,
     )
     db.add(new_user)
     try:
@@ -38,7 +32,7 @@ def create_user(db: Session, create_user: UserCreate) -> User:
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Email or username already registered",
+            detail="Email already registered",
         )
 
     db.refresh(new_user)
@@ -47,7 +41,7 @@ def create_user(db: Session, create_user: UserCreate) -> User:
 
 def update_user(db: Session, update_user: UserUpdate, current_user: User) -> User:
     """
-    update user (email and/or password only)
+    update user (email, password, and display name)
     """
     user = get_user_by_id(db, current_user.id)
     if user is None:
@@ -55,11 +49,9 @@ def update_user(db: Session, update_user: UserUpdate, current_user: User) -> Use
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
         )
 
-    if update_user.email is not None:
-        user.email = update_user.email
-
-    if update_user.password is not None:
-        user.password = password_hash.hash(update_user.password)
+    user.email = update_user.email
+    user.password = password_hash.hash(update_user.password)
+    user.display_name = update_user.display_name
 
     try:
         db.commit()
@@ -67,7 +59,7 @@ def update_user(db: Session, update_user: UserUpdate, current_user: User) -> Use
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Email or username already registered",
+            detail="Email already registered",
         )
 
     db.refresh(user)
@@ -77,6 +69,10 @@ def update_user(db: Session, update_user: UserUpdate, current_user: User) -> Use
 def delete_user(db: Session, current_user: User) -> None:
     """
     remove user
+
+    **TO-DO: UPDATE**
+    When a user is deleted, their associated credentials also need to get deleted.
+    (In credential, FK- user.id, on delete CASCADE)
     """
     db.delete(current_user)
     db.commit()
@@ -94,11 +90,11 @@ def get_user_by_id(db: Session, user_id: str) -> User | None:
     return db.query(User).filter(User.id == user_id).first()
 
 
-def get_user_by_username(db: Session, username: str) -> User | None:
+def get_user_by_email(db: Session, email: str) -> User | None:
     """
-    Retrieve user by username
+    Retrieve user by email
     """
-    return db.query(User).filter(User.username == username).first()
+    return db.query(User).filter(User.email == email).first()
 
 
 def get_all_users(db: Session):
