@@ -8,15 +8,8 @@ from database import get_db
 from main import app
 
 DATABASE_URL = "sqlite:///:memory:"
-engine = create_engine(
-        DATABASE_URL, 
-        connect_args={"check_same_thread": False}
-)
-TestSessionLocal = sessionmaker(
-        autocommit=False,
-        autoflush=False, 
-        bind=engine
-)
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 @pytest.fixture(scope="session")
@@ -33,7 +26,7 @@ def db(db_engine):
     session = TestSessionLocal(bind=connection)
 
     yield session
-    
+
     session.close()
     transaction.rollback()
     connection.close()
@@ -43,6 +36,7 @@ def db(db_engine):
 def override_db(db):
     def _get_db_override():
         yield db
+
     app.dependency_overrides[get_db] = _get_db_override
     yield
     app.dependency_overrides.clear()
@@ -54,6 +48,7 @@ def client():
         yield c
 
 
+# --- admin token fixture ---
 @pytest.fixture
 def token(client):
     test_admin = {
@@ -62,11 +57,8 @@ def token(client):
         "is_admin": True,
     }
     client.post("/spm/admin/register", json=test_admin)
-    data = {
-        "username": "testadmin1",
-        "password": "testpassword"
-    }
+    data = {"username": "testadmin1", "password": "testpassword"}
 
     response = client.post("/spm/admin/login", data=data)
-    
+
     return response.json()["access_token"]

@@ -2,17 +2,16 @@ import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import PyJWTError
-from starlette.config import Config
 from sqlalchemy.orm import Session
+from auth import SECRET_KEY, ALGORITHM
+from starlette.config import Config
 
 from user.user_crud import get_user_by_username
 
 from database import get_db
 
 config = Config(".env")
-SECRET_KEY = config("SECRET_KEY", default="SECRET_KEY")
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = int(config("TIMEOUT", default=1))
+# ACCESS_TOKEN_EXPIRE_MINUTES = int(config("TIMEOUT", default=1))
 
 router = APIRouter(prefix="/spm/user")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/spm/user/login")
