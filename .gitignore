@@ -5,3 +5,4 @@ __pycache__
 alembic
 .env
 *.db
+backend/migrations/
