@@ -5,9 +5,7 @@ from sqlalchemy import (
 )
 
 from sqlalchemy.orm import DeclarativeBase, relationship
-
-# UUID import (added to both User and Credential classes for generating unique string IDs)
-import uuid
+import uuid  # UUID import (added to Credential class for generating unique string IDs on creation of a credential)
 
 
 class Base(DeclarativeBase):
@@ -20,7 +18,7 @@ class User(Base):
     """
 
     __tablename__ = "user"
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(String, primary_key=True)
     username = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
