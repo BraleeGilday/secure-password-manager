@@ -25,8 +25,8 @@ app.add_middleware(
 )
 
 # app.include_router(routers, tags[]) go here
-app.include_router(user_router)
-app.include_router(credential_router)
+app.include_router(user_router, tags=["user"])
+app.include_router(credential_router, tags=["credential"])
 
 
 # to be removed
