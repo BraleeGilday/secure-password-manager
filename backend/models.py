@@ -33,10 +33,5 @@ class Credential(Base):
     username = Column(String, nullable=False)
     password = Column(String, nullable=False)
     notes = Column(String, nullable=True)
-    # maybe set enc_key to True for beginning?
-    # encryption_key = Column(
-    #     String,
-    #     nullable=False
-    #     )
     user_id = Column(String, ForeignKey("user.id"))
     user = relationship("User", backref="credential")
