@@ -1,11 +1,9 @@
 from sqlalchemy.orm import Session  # for type hinting only
 
 # Import both user and credential fixtures to register them with pytest
-from test_app.fixtures.user_fixtures import registered_user, user_token
-from test_app.fixtures.credential_fixtures import (
-    auth_headers,
-    credential_payload,
-    created_credential,
+pytest_plugins = (
+    "test_app.fixtures.user_fixtures",
+    "test_app.fixtures.credential_fixtures",
 )
 
 from models import Credential
@@ -14,7 +12,8 @@ from credential.credential_crypto import decrypt_password
 
 # Test CREATE credential (+ encryption/decryption)
 def test_create_credential_encrypts_at_rest(created_credential, credential_payload, db: Session):
-    # API returns the credential with plaintext password and correct fields (201 status code already asserted in credential_fixtures)
+    # API returns the credential with plaintext password and correct field
+    # (201 status code already asserted in credential_fixtures)
     assert created_credential["site"] == credential_payload["site"]
     assert created_credential["username"] == credential_payload["username"]
     assert created_credential["password"] == credential_payload["password"]
