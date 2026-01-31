@@ -10,14 +10,6 @@ from credential.credential_crypto import encrypt_password
 
 # -------------------- Utilities -------------------- #
 
-# This one is unused so far, but maybe later? Added for consistency
-def get_credential_by_id(db: Session, credential_id: str) -> Credential | None:
-    """
-    Retrieve credential by id (no ownership check).
-    """
-    return db.query(Credential).filter(Credential.id == credential_id).first()
-
-
 def get_credential_for_user(db: Session, credential_id: str, user_id: str) -> Credential | None:
     """
     Retrieve credential for a specific user by id (with ownership check).
