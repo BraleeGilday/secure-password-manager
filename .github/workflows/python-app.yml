@@ -30,6 +30,13 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Generate test keys  # seeing if this fixes GitHub CI pytest
+      run: |
+        echo "SECRET_KEY=$(openssl rand -hex 32)" >> $GITHUB_ENV
+        echo "CRED_ENC_KEY=$(python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())')" >> $GITHUB_ENV
+        echo "TIMEOUT=30" >> $GITHUB_ENV
     - name: Test with pytest
+      env:
+        PYTHONPATH: backend
       run: |
         pytest
