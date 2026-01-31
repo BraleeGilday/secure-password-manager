@@ -31,11 +31,20 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-    - name: Generate test keys  # seeing if this fixed GitHub CI build for pytest
+    - name: Generate test keys  # needed for GitHub CI (passing pytest)
       run: |
         echo "SECRET_KEY=$(openssl rand -hex 32)" >> $GITHUB_ENV
         echo "CRED_ENC_KEY=$(python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())')" >> $GITHUB_ENV
         echo "TIMEOUT=30" >> $GITHUB_ENV
+
+    - name: Write backend .env  # needed for GitHub CI (passing pytest)
+      run: |
+        cat > backend/.env << EOF
+        SECRET_KEY=$SECRET_KEY
+        CRED_ENC_KEY=$CRED_ENC_KEY
+        TIMEOUT=$TIMEOUT
+        EOF
+
     - name: Test with pytest
       env:
         PYTHONPATH: backend

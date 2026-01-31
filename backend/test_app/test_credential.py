@@ -1,11 +1,11 @@
-from sqlalchemy.orm import Session  # for type hinting only
-
-# Import both user and credential fixtures to register them with pytest
+# Import both user and credential fixtures to register them with pytest (using plugins to avoid flake8 unused/undefined flag)
 pytest_plugins = (
     "test_app.fixtures.user_fixtures",
     "test_app.fixtures.credential_fixtures",
 )
 
+
+from sqlalchemy.orm import Session  # for type hinting only
 from models import Credential
 from credential.credential_crypto import decrypt_password
 
