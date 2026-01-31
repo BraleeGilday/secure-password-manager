@@ -39,7 +39,7 @@ jobs:
 
     - name: Write backend .env  # needed for GitHub CI (passing pytest)
       run: |
-        cat > backend/.env << EOF
+        cat > .env << EOF
         SECRET_KEY=$SECRET_KEY
         CRED_ENC_KEY=$CRED_ENC_KEY
         TIMEOUT=$TIMEOUT
