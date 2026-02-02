@@ -1,6 +1,6 @@
-from sqlalchemy import Column, ForeignKey, String, Integer, DateTime, func
+from sqlalchemy import Column, ForeignKey, String, Integer, DateTime, func, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, relationship
-import uuid  # UUID import (added to Credential class for generating unique string IDs on creation of a credential)
+import uuid
 
 
 class Base(DeclarativeBase):
@@ -28,10 +28,15 @@ class Credential(Base):
     """
 
     __tablename__ = "credential"
+    # Disallow credentials with duplicate usernames if for the exact same site (different sites can use duplicate usernames)
+    __table_args__ = (
+        UniqueConstraint("user_id", "site", "username", name="uq_credential_user_site_username"),
+    )
+
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     site = Column(String, nullable=False)
     username = Column(String, nullable=False)
     password = Column(String, nullable=False)
     notes = Column(String, nullable=True)
-    user_id = Column(String, ForeignKey("user.id"))
+    user_id = Column(String, ForeignKey("user.id"), nullable=False)
     user = relationship("User", backref="credential")

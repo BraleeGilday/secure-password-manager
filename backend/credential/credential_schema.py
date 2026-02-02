@@ -48,6 +48,7 @@ class CredentialEntryOut(BaseModel):
     username: str
     password: str
     notes: Optional[str] = None
+    user_id: str
 
     # Read as ORM object with attributes instead of dict
     model_config = ConfigDict(from_attributes=True)

@@ -27,7 +27,7 @@ def created_credential(client, auth_headers, credential_payload):
     Creates a credential via the API and returns its JSON response.
     """
     response = client.post(
-        "/spm/credentials",
+        "/spm/credentials/",
         json=credential_payload,
         headers=auth_headers,
     )

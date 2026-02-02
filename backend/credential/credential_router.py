@@ -7,11 +7,11 @@ from user.user_auth import get_current_user
 from models import User, Credential
 
 from credential.credential_crud import (
+    get_credential_for_user,
+    search_credentials_for_user,  # handles get_all_credentials_user too
     create_credential,
     update_credential,
-    delete_credential,
-    get_credential_for_user,
-    get_all_credentials_for_user,
+    delete_credential
 )
 
 from credential.credential_schema import (
@@ -45,13 +45,14 @@ def _to_entry_out(cred: Credential) -> CredentialEntryOut:
         username=cred.username,
         password=plain_pw,
         notes=cred.notes,
+        user_id=cred.user_id,
     )
 
 
 # -------------------- Router Endpoints -------------------- #
 
 # Create a credential entry
-@router.post("", response_model=CredentialEntryOut, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=CredentialEntryOut, status_code=status.HTTP_201_CREATED)
 def create_credential_route(
     credential_create: CredentialCreate,
     db: Session = Depends(get_db),
@@ -63,14 +64,15 @@ def create_credential_route(
 
 
 # Read all credentials in overview (can search by site)
-@router.get("", response_model=list[CredentialOverviewOut])
+@router.get("/", response_model=list[CredentialOverviewOut])
 def list_credentials_route(
     search: str | None = Query(default=None, description="Search by site"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> list[CredentialOverviewOut]:
 
-    creds = get_all_credentials_for_user(db=db, user_id=current_user.id, search=search)
+    # Defaults to get_all_credentials_for_user if no search
+    creds = search_credentials_for_user(db=db, user_id=current_user.id, search=search)
     return creds
 
 

@@ -9,13 +9,21 @@
     ```
     python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
     ```
+  
+- add generated keys to an .env file in backend (replace fields including '<>')
+    ```
+    SECRET_KEY=<your_SECRET_key>
+    CRED_ENC_KEY=<your_CRED_ENC_key>
+    TIMEOUT=30
+    ```
+
 
 - navigate to backend:
     ```
     cd backend
     ```
 
-- create virtual environment
+- create virtual environment:
     ```
     python3 -m venv <venv name>
     ```

@@ -31,7 +31,7 @@ def test_create_credential_encrypts_at_rest(created_credential, credential_paylo
 
 # Test READ ALL credentials
 def test_list_credentials_returns_overview(client, auth_headers, created_credential):
-    response = client.get("/spm/credentials", headers=auth_headers)
+    response = client.get("/spm/credentials/", headers=auth_headers)
     assert response.status_code == 200, response.text
     data = response.json()
     assert isinstance(data, list)
@@ -82,7 +82,7 @@ def test_update_credential_by_id(client, auth_headers, created_credential, db: S
 
 
 # Test DELETE credential
-def test_delete_credential_by_id(client, auth_headers, created_credential):
+def test_delete_credential_by_id(client, auth_headers, created_credential, db: Session):
     cred_id = created_credential["id"]
     response = client.delete(f"/spm/credentials/{cred_id}", headers=auth_headers)
     assert response.status_code == 204, response.text
@@ -90,3 +90,39 @@ def test_delete_credential_by_id(client, auth_headers, created_credential):
     # After deletion, reading the credential should return 404 not found
     response = client.get(f"/spm/credentials/{cred_id}", headers=auth_headers)
     assert response.status_code == 404
+
+    # Confirm database is empty after deletion of credential
+    assert db.query(Credential).count() == 0
+
+
+# Test disallowing CREATE credential with same username/site as another existing credential (no duplicate usernames for same sites)
+def test_create_duplicate_site_username_rejected(client, auth_headers, created_credential):
+    dup_payload = {
+        "site": created_credential["site"],
+        "username": created_credential["username"],
+        "password": "other_password_example_24",
+        "notes": "attempting duplication!!!",
+    }
+    response = client.post("/spm/credentials/", json=dup_payload, headers=auth_headers)
+    assert response.status_code == 409, response.text
+
+
+# Test disallowing UPDATE credential with same username/site as another existing credential (no duplicate usernames for same sites)
+def test_update_to_duplicate_site_username_rejected(client, auth_headers, created_credential):
+    payload2 = {
+        "site": created_credential["site"],
+        "username": created_credential["username"] + "_alt",
+        "password": "pw_2_12!random",
+        "notes": "second cred random note",
+    }
+    resp2 = client.post("/spm/credentials/", json=payload2, headers=auth_headers)
+    assert resp2.status_code == 201, resp2.text
+    cred2_id = resp2.json()["id"]
+
+    # Attempt to set username of cred2 to same as first credential, should fail
+    resp_upd = client.patch(
+        f"/spm/credentials/{cred2_id}",
+        json={"username": created_credential["username"]},
+        headers=auth_headers,
+    )
+    assert resp_upd.status_code == 409, resp_upd.text
