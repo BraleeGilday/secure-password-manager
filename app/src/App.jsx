@@ -1,33 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, {useState} from 'react'
+import {Link, Router, Routes} from 'react-router-dom';
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const copyrightYear = new Date().getFullYear();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogout = () => {
+    // remove token;
+    setIsLoggedIn(false);
+  }
+  // this will need to go to separate route
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <header>
+        <div className='navbar'>
+        <div>
+          <h1>SPM</h1>
+        </div>
+        <div>
+          <nav>
+            {/* Use Link */}
+            {isLoggedIn ? (
+              <div>
+                <a>Settings</a>
+                <a onClick={handleLogout}>Logout</a>
+              </div>
+            ):(
+              <div>
+              <a>Register</a>
+              <a onClick={handleLogin}>Login</a>
+              </div>
+            )}
+          </nav>
+        </div>
+        </div>
+      </header>
+      <main>
+        {isLoggedIn ? (
+          <div className='tempbox'>
+            <p>Credentials and Things</p>
+          </div>
+        ): (
+          <div className='tempbox'>
+            <p>Register or Login to get started!</p>
+          </div>
+        )}
+
+      </main>
+      <footer>
+        <p>&copy;{copyrightYear}</p>
+      </footer>
     </>
   )
 }
