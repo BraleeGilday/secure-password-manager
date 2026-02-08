@@ -14,8 +14,8 @@ def generate_password(
     has_numbers = include digits (default)
     mixed_case = include upper and lower roman english letters (default)
     """
-    (alphabet, symbols, numbers,
-     total_symbols, total_numbers, total_letters
+    (lowers, uppers, symbols, numbers,
+     total_symbols, total_numbers, total_lowers, total_uppers
      ) = create_alphabet(
          length,
          has_symbols,
@@ -24,9 +24,15 @@ def generate_password(
         )
 
     return create_password(
-        length, symbols, numbers,
-        alphabet, total_symbols, total_numbers,
-        total_letters,
+        length,
+        symbols,
+        numbers,
+        lowers,
+        uppers,
+        total_symbols,
+        total_numbers,
+        total_lowers,
+        total_uppers
     )
 
 
@@ -35,18 +41,22 @@ def create_alphabet(
         has_symbols: bool,
         has_numbers: bool,
         mixed_case: bool
-        ) -> tuple[str, str, str, int, int, int]:
+        ) -> tuple[str, str, str, str, int, int, int, int]:
     """
     Create the alphabet for the password generator
     """
     # should split into upper and lower and require at least 1 char each?
-    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    uppers = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    lowers = "abcdefghijklmnopqrstuvwxyz"
     symbols = ""
     numbers = ""
-
+    max_uppers = random.randint(1, length // 2)
+    total_uppers = max(1, max_uppers)
+    total_lowers = 0
     total_symbols, total_numbers = 0, 0
+
     # at least 1, at most (length of pwd / 4) digits or symbols
-    max_special_chars = length // 4
+    max_special_chars = max(1, length // 4)
 
     if has_symbols:
         total_symbols = random.randint(1, max_special_chars)
@@ -56,40 +66,47 @@ def create_alphabet(
         total_numbers = random.randint(1, max_special_chars)
         numbers = "1234567890"
 
+    total_lowers = length - total_symbols - total_numbers - total_uppers
+
     if not mixed_case:
-        alphabet = "abcdefghijklmnopqrstuvwxyz"
+        total_uppers = 0
+        total_lowers = length - total_symbols - total_numbers
+        uppers = ""
 
-    total_letters = length - total_symbols - total_numbers
-
-    return (alphabet, symbols, numbers,
-            total_symbols, total_numbers, total_letters)
+    return (lowers, uppers, symbols, numbers,
+            total_symbols, total_numbers, total_lowers, total_uppers)
 
 
 def create_password(
         length: int,
         symbols: str,
         numbers: str,
-        alphabet: str,
+        lowers: str,
+        uppers: str,
         total_symbols: int,
         total_numbers: int,
-        total_letters: int,
+        total_lowers: int,
+        total_uppers: int,
 ) -> str:
     """
     Creates the final password string
     """
 
     password = []
-
-    while len(password) != length:
+    
+    for _ in range(length):
         if total_symbols > 0:
             password.append(random.choice(symbols))
             total_symbols -= 1
         if total_numbers > 0:
             password.append(random.choice(numbers))
             total_numbers -= 1
-        if total_letters > 0:
-            password.append(random.choice(alphabet))
-            total_letters -= 1
+        if total_lowers > 0:
+            password.append(random.choice(lowers))
+            total_lowers -= 1
+        if total_uppers > 0:
+            password.append(random.choice(uppers))
+            total_uppers -= 1
 
     random.shuffle(password)
     return "".join(password)

@@ -16,12 +16,12 @@ def test_numbers():
 
 
 @pytest.fixture
-def test_mixed_case():
-    return "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+def test_uppers():
+    return "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
 @pytest.fixture
-def test_single_case():
+def test_lowers():
     return "abcdefghijklmnopqrstuvwxyz"
 
 
@@ -47,37 +47,69 @@ def count_characters(pwd, test_symbols):
     return symbols, numbers, lowers, uppers
 
 
-def test_create_password_01(test_symbols, test_numbers, test_mixed_case):
+def test_create_password_01(
+        test_symbols,
+        test_numbers,
+        test_lowers,
+        test_uppers
+):
     """
     length = 0
     """
     pwd = create_password(
-        0, test_symbols, test_numbers, test_mixed_case,
-        0, 0, 0,
+        0, test_symbols, test_numbers, test_lowers, test_uppers,
+        0, 0, 0, 0
     )
 
     assert len(pwd) == 0
 
 
-def test_create_password_02(test_symbols, test_numbers, test_mixed_case):
+def test_create_password_01a(
+        test_symbols,
+        test_numbers,
+        test_lowers,
+        test_uppers
+):
+    """
+    length = 0; passed int values
+    """
+    pwd = create_password(
+        0, test_symbols, test_numbers, test_lowers, test_uppers,
+        3, 3, 9, 1
+    )
+
+    assert len(pwd) == 0
+
+
+def test_create_password_02(
+        test_symbols,
+        test_numbers,
+        test_lowers,
+        test_uppers
+):
     """
     length = 16
     """
     pwd = create_password(
-        16, test_symbols, test_numbers, test_mixed_case,
-        1, 1, 14,
+        16, test_symbols, test_numbers, test_lowers, test_uppers,
+        1, 1, 7, 7
     )
 
     assert len(pwd) == 16
 
 
-def test_create_password_03(test_symbols, test_numbers, test_mixed_case):
+def test_create_password_03(
+        test_symbols,
+        test_numbers,
+        test_lowers,
+        test_uppers
+):
     """
-    4 symbols, 4 digits, 8 letters
+    4 symbols, 4 digits, 8 letters (6 + 2)
     """
     pwd = create_password(
-        16, test_symbols, test_numbers, test_mixed_case,
-        4, 4, 8,
+        16, test_symbols, test_numbers, test_lowers, test_uppers,
+        4, 4, 6, 2
     )
 
     symbols, numbers, lowers, uppers = count_characters(pwd, test_symbols)
@@ -89,13 +121,13 @@ def test_create_password_03(test_symbols, test_numbers, test_mixed_case):
     assert letters == 8
 
 
-def test_create_password_04(test_symbols, test_mixed_case):
+def test_create_password_04(test_symbols, test_lowers, test_uppers):
     """
     no digits
     """
     pwd = create_password(
-        16, test_symbols, "", test_mixed_case,
-        4, 0, 12,
+        16, test_symbols, "", test_lowers, test_uppers,
+        4, 0, 8, 4
     )
 
     symbols, numbers, lowers, uppers = count_characters(pwd, test_symbols)
@@ -107,13 +139,18 @@ def test_create_password_04(test_symbols, test_mixed_case):
     assert letters == 12
 
 
-def test_create_password_05(test_symbols, test_numbers, test_mixed_case):
+def test_create_password_05(
+        test_symbols,
+        test_numbers,
+        test_lowers,
+        test_uppers
+):
     """
     no symbols
     """
     pwd = create_password(
-        16, "", test_numbers, test_mixed_case,
-        0, 2, 14,
+        16, "", test_numbers, test_lowers, test_uppers,
+        0, 2, 10, 4
     )
 
     symbols, numbers, lowers, uppers = count_characters(pwd, test_symbols)
@@ -125,13 +162,18 @@ def test_create_password_05(test_symbols, test_numbers, test_mixed_case):
     assert letters == 14
 
 
-def test_create_password_06(test_symbols, test_numbers, test_single_case):
+def test_create_password_06(
+        test_symbols,
+        test_numbers,
+        test_lowers,
+        test_uppers
+):
     """
     no upper case
     """
     pwd = create_password(
-        16, test_symbols, test_numbers, test_single_case,
-        1, 3, 12,
+        16, test_symbols, test_numbers, test_lowers, test_uppers,
+        1, 3, 12, 0
     )
 
     symbols, numbers, lowers, uppers = count_characters(pwd, test_symbols)
