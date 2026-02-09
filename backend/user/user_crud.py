@@ -1,6 +1,4 @@
 import uuid
-from fastapi import HTTPException, status
-from sqlalchemy.exc import IntegrityError
 from pwdlib import PasswordHash
 from sqlalchemy.orm import Session
 
@@ -26,15 +24,7 @@ def create_user(db: Session, create_user: UserCreate) -> User:
         login_attempts=0,
     )
     db.add(new_user)
-    try:
-        db.commit()
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Email already registered",
-        )
-
+    db.commit()
     db.refresh(new_user)
     return new_user
 
@@ -44,24 +34,12 @@ def update_user(db: Session, update_user: UserUpdate, current_user: User) -> Use
     update user (email, password, and display name)
     """
     user = get_user_by_id(db, current_user.id)
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-        )
 
     user.email = update_user.email
     user.password = password_hash.hash(update_user.password)
     user.display_name = update_user.display_name
 
-    try:
-        db.commit()
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Email already registered",
-        )
-
+    db.commit()
     db.refresh(user)
     return user
 
@@ -99,3 +77,17 @@ def get_user_by_email(db: Session, email: str) -> User | None:
 
 def get_all_users(db: Session):
     return db.query(User).all()
+
+
+def increment_login_attempts(db: Session, user: User) -> None:
+    user.login_attempts += 1
+    db.commit()
+    db.refresh(user)
+    return
+
+
+def reset_login_attempts(db: Session, user: User) -> None:
+    user.login_attempts = 0
+    db.commit()
+    db.refresh(user)
+    return
