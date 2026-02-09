@@ -6,6 +6,7 @@ from fastapi import (
 from fastapi.security import OAuth2PasswordRequestForm
 
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from starlette import status
 from starlette.config import Config
@@ -19,6 +20,8 @@ from user.user_crud import (
     get_user_by_id,
     get_user_by_email,
     password_hash,
+    increment_login_attempts,
+    reset_login_attempts,
 )
 from user.user_auth import get_current_user
 
@@ -44,13 +47,49 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(config("TIMEOUT", default=1))
 MAX_LOGIN_ATTEMPTS = 4
 
 
+# ----------------- Helper Function -------------------
+
+
+def verify_user_access(current_user: User, user_id: str) -> None:
+    if current_user.id != user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Forbidden",
+        )
+    return
+
+
+def get_user_by_id_or_404(db: Session, user_id: str) -> User:
+    user = get_user_by_id(db, user_id)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+    return user
+
+
+# ----------------- CRUD -------------------
+
+
 # CREATE
 @router.post("/register")
 def register_user(
     user_create: UserCreate,
     db: Session = Depends(get_db),
 ) -> UserResponse:
-    new_user = create_user(db=db, create_user=user_create)
+    # router-level validation
+    existing = get_user_by_email(db, user_create.email)
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email already registered",
+        )
+
+    try:
+        new_user = create_user(db=db, create_user=user_create)
+    except IntegrityError:
+        raise HTTPException(status_code=409, detail="Email already registered")
 
     return UserResponse(
         id=new_user.id,
@@ -85,8 +124,7 @@ def login_for_access_token(
 
     # Incorrect password
     if not password_hash.verify(form_data.password, user.password):
-        user.login_attempts += 1
-        db.commit()
+        increment_login_attempts(db, user)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect password",
@@ -94,8 +132,7 @@ def login_for_access_token(
         )
 
     # Correct password
-    user.login_attempts = 0
-    db.commit()
+    reset_login_attempts(db, user)
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
@@ -111,17 +148,8 @@ def read_user_route(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> UserResponse:
-    if current_user.id != user_id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
-
-    user = get_user_by_id(db, user_id)
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
-
-    return user
+    verify_user_access(current_user, user_id)
+    return get_user_by_id_or_404(db, user_id)
 
 
 # UPDATE
@@ -132,10 +160,13 @@ def update_user_route(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> UserResponse:
-    if current_user.id != user_id:
+    verify_user_access(current_user, user_id)
+
+    existing = get_user_by_email(db, user_update.email)
+    if existing and existing.id != current_user.id:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to update this user",
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email already registered",
         )
 
     updated = update_user(
@@ -153,18 +184,16 @@ def delete_user_route(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    if current_user.id != user_id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to delete this user",
-        )
-
-    user = get_user_by_id(db, user_id)
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
-
+    verify_user_access(current_user, user_id)
+    user = get_user_by_id_or_404(db, user_id)
     delete_user(db, user)
     return None
+
+
+@router.get("/{user_id}/credentials")
+def get_user_credentials(
+    user_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    pass
