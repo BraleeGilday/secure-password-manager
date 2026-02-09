@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {Link, Router, Routes} from 'react-router-dom';
 import './App.css'
+import Main from './components/Main';
 
 function App() {
   const copyrightYear = new Date().getFullYear();
@@ -41,6 +42,7 @@ function App() {
         </div>
       </header>
       <main>
+        {/* Routes go here */}
         {isLoggedIn ? (
           <div className='tempbox'>
             <p>Credentials and Things</p>
