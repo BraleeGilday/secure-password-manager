@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {Link, Router, Routes} from 'react-router-dom';
 import './App.css'
-import Main from './components/Main';
+import Welcome from './pages/Welcome';
 
 function App() {
   const copyrightYear = new Date().getFullYear();
