@@ -48,7 +48,7 @@ def test_login_wrong_password_401(client, registered_user):
     )
     assert response.status_code == 401
 
-    
+
 def test_login_increments_attempts(client, registered_user):
     email = registered_user["email"]
 

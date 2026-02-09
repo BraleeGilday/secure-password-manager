@@ -49,14 +49,16 @@ MAX_LOGIN_ATTEMPTS = 4
 
 # ----------------- Helper Function -------------------
 
+
 def verify_user_access(current_user: User, user_id: str) -> None:
     if current_user.id != user_id:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, 
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Forbidden",
         )
     return
-    
+
+
 def get_user_by_id_or_404(db: Session, user_id: str) -> User:
     user = get_user_by_id(db, user_id)
     if user is None:
@@ -68,6 +70,7 @@ def get_user_by_id_or_404(db: Session, user_id: str) -> User:
 
 
 # ----------------- CRUD -------------------
+
 
 # CREATE
 @router.post("/register")
