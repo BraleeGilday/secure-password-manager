@@ -1,8 +1,4 @@
-from sqlalchemy import (
-    Column,
-    ForeignKey,
-    String,
-)
+from sqlalchemy import Column, ForeignKey, String, Integer, DateTime, func
 
 from sqlalchemy.orm import DeclarativeBase, relationship
 
@@ -18,11 +14,11 @@ class User(Base):
 
     __tablename__ = "user"
     id = Column(String, primary_key=True)
-    username = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
-    # date created? modified?
-    # log in attempts?
+    display_name = Column(String, nullable=True)
+    login_attempts = Column(Integer, default=0, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     # admin ?
 
 
