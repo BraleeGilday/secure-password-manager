@@ -1,5 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pwd_generator import pwd_gen_router
+
+from user.user_router import router as user_router
+
+from user.user_router import router as user_router
+from credential.credential_router import router as credential_router
 
 # https://fastapi.tiangolo.com/tutorial/cors/#use-corsmiddleware
 
@@ -18,10 +24,13 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],   
+    allow_headers=["*"],
 )
 
 # app.include_router(routers, tags[]) go here
+app.include_router(credential_router, tags=["credential"])
+app.include_router(user_router, tags=["User"])
+app.include_router(pwd_gen_router.router, tags=["Password"])
 
 
 # to be removed

@@ -1,10 +1,7 @@
-from sqlalchemy import (
-    Column,
-    ForeignKey,
-    String,
-)
+from sqlalchemy import Column, ForeignKey, String, Integer, DateTime, func, UniqueConstraint
 
 from sqlalchemy.orm import DeclarativeBase, relationship
+import uuid
 
 
 class Base(DeclarativeBase):
@@ -18,11 +15,11 @@ class User(Base):
 
     __tablename__ = "user"
     id = Column(String, primary_key=True)
-    username = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
-    # date created? modified?
-    # log in attempts?
+    display_name = Column(String, nullable=True)
+    login_attempts = Column(Integer, default=0, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     # admin ?
 
 
@@ -32,15 +29,15 @@ class Credential(Base):
     """
 
     __tablename__ = "credential"
-    id = Column(String, primary_key=True)
+    # Disallow credentials with duplicate usernames if for the exact same site (different sites can use duplicate usernames)
+    __table_args__ = (
+        UniqueConstraint("user_id", "site", "username", name="uq_credential_user_site_username"),
+    )
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    site = Column(String, nullable=False)
     username = Column(String, nullable=False)
     password = Column(String, nullable=False)
-    site = Column(String, nullable=False)
     notes = Column(String, nullable=True)
-    # maybe set enc_key to True for beginning?
-    # encryption_key = Column(
-    #     String,
-    #     nullable=False
-    #     )
-    user_id = Column(String, ForeignKey("user.id"))
+    user_id = Column(String, ForeignKey("user.id"), nullable=False)
     user = relationship("User", backref="credential")
