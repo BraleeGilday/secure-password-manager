@@ -4,8 +4,11 @@ __pycache__
 .pytest_cache
 alembic
 migrations
+<<<<<<< HEAD
+=======
 node_modules
 .env
 
 # SQLite database
 spm.db
+>>>>>>> main
