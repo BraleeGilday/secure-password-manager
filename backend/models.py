@@ -1,6 +1,7 @@
-from sqlalchemy import Column, ForeignKey, String, Integer, DateTime, func
+from sqlalchemy import Column, ForeignKey, String, Integer, DateTime, func, UniqueConstraint
 
 from sqlalchemy.orm import DeclarativeBase, relationship
+import uuid
 
 
 class Base(DeclarativeBase):
@@ -28,15 +29,15 @@ class Credential(Base):
     """
 
     __tablename__ = "credential"
-    id = Column(String, primary_key=True)
+    # Disallow credentials with duplicate usernames if for the exact same site (different sites can use duplicate usernames)
+    __table_args__ = (
+        UniqueConstraint("user_id", "site", "username", name="uq_credential_user_site_username"),
+    )
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    site = Column(String, nullable=False)
     username = Column(String, nullable=False)
     password = Column(String, nullable=False)
-    site = Column(String, nullable=False)
     notes = Column(String, nullable=True)
-    # maybe set enc_key to True for beginning?
-    # encryption_key = Column(
-    #     String,
-    #     nullable=False
-    #     )
-    user_id = Column(String, ForeignKey("user.id"))
+    user_id = Column(String, ForeignKey("user.id"), nullable=False)
     user = relationship("User", backref="credential")

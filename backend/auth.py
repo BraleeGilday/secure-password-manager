@@ -3,6 +3,7 @@ import jwt
 from starlette.config import Config
 
 config = Config(".env")
+
 SECRET_KEY = config("SECRET_KEY", default="dev-secret-key-change-me")
 ALGORITHM = "HS256"
 
