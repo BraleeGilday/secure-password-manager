@@ -3,6 +3,9 @@ venv/
 __pycache__
 .pytest_cache
 alembic
+migrations
+node_modules
 .env
-*.db
-backend/migrations/
+
+# SQLite database
+spm.db
