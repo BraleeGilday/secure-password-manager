@@ -1,7 +1,8 @@
 import { useState } from "react"
+import axios from 'axios';
 
 export default function PasswordGenerator() {
-    // const getToken = () => localStorage.getItem('token');
+    const getToken = () => localStorage.getItem('token');
     const [formData, setFormData] = useState({
         length: 16,
         has_symbols: true,
@@ -19,14 +20,12 @@ export default function PasswordGenerator() {
         });
     };
 
-    const handleSubmit = async (formData) => {
+    const handleSubmit = async (event) => {
+        event.preventDefault();
         try {
-            await axios.post("http://127.0.0.1:8000/spm/password/generate", formData, {
-                header: {
-                    Authorization: `Bearer ${getToken()}`
-                }
-            });
-            const generatedPassword = respsone.data;
+            console.log("HERE!!!");
+            const response = await axios.post("http://127.0.0.1:8000/spm/password/generate", formData);
+            const generatedPassword = response.data;
             console.log(generatedPassword.password);
             setPassword(generatedPassword.password);
         } catch (error) {
