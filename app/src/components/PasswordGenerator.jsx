@@ -23,10 +23,8 @@ export default function PasswordGenerator() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            console.log("HERE!!!");
             const response = await axios.post("http://127.0.0.1:8000/spm/password/generate", formData);
             const generatedPassword = response.data;
-            console.log(generatedPassword.password);
             setPassword(generatedPassword.password);
         } catch (error) {
             console.log("Error generating password");
