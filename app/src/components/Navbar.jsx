@@ -5,6 +5,7 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
     // will need to be updated
     const handleLogin = () => {
         setIsLoggedIn(true);
+        // redirect to credentials
     }
 
     const handleLogout = () => {
