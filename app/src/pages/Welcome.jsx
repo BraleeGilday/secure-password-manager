@@ -1,7 +1,7 @@
 import Card from "../components/Card";
 
-import PasswordGenerator from "../components/PasswordGenerator";
-import PasswordGeneratorButton from "../components/PasswordGeneratorButton";
+import PasswordGeneratorButton from "./pwd_gen/PasswordGeneratorButton";
+
 export default function Welcome() {
     // pwd gen modal will need to be relocated to appropriate page (credentials)
 

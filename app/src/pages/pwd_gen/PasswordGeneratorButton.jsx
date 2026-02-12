@@ -1,7 +1,7 @@
 // for pwd gen modal
 import { useState } from "react";
 // ------
-import PasswordGeneratorModal from "./PasswordGeneratorModal";
+import PasswordGeneratorModal from "./PasswordGeneratorModal"
 import PasswordGenerator from "./PasswordGenerator";
 
 export default function PasswordGeneratorButton() {
