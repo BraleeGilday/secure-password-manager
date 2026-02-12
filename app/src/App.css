@@ -68,10 +68,27 @@ main {
 }
 
 /* --- PASSWORD GENERATOR */
+.pwd-gen-dialog {
+    padding: 1%;
+    border:none;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    width: 35rem;
+    height:fit-content;
+}
+
+.pwd-gen-btn {
+    width:fit-content;
+    padding: 1%;
+    border: 1px solid purple;
+    border-radius: 15px;
+}
+
 .pwd-gen-box {
     width:28rem;
     height: fit-content;
-    border: 1.5px solid lightgray;
+    border: none;
     border-radius: 15px;
     padding: 2%;
     margin: 5%;

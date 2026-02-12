@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { createPortal } from "react-dom";
 
-export default function PasswordGeneratorModal() {
+export default function PasswordGeneratorModal({close, content}) {
     const dialog = useRef();
 
     useEffect(() => {
@@ -16,9 +16,10 @@ export default function PasswordGeneratorModal() {
     };
     
     return createPortal(
-        <dialog onClose={handleClose} ref={dialog}>
+        <dialog className="pwd-gen-dialog" onClose={handleClose} ref={dialog}>
+            {content}
             <form method="dialog">
-                <button onClick={handleClose}>Close</button>
+                <button type="button" onClick={handleClose}>Close</button>
             </form>
         </dialog>,
         document.getElementById('modal')
