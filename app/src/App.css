@@ -69,8 +69,7 @@ main {
 
 /* --- PASSWORD GENERATOR */
 .pwd-gen-box {
-    max-width: 30rem;
-    min-width:25rem;
+    width:28rem;
     height: fit-content;
     border: 1.5px solid lightgray;
     border-radius: 15px;
@@ -121,8 +120,11 @@ main {
 }
 
 .spacer label {
-    font-weight: 600;
+    font-weight: 500;
+    font-size: medium;
 }
+
+.spacer #length-display {font-weight: 600; font-size:medium;}
 
 /* --- FOOTER --- */
 footer {

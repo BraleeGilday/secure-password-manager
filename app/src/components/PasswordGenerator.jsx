@@ -59,7 +59,10 @@ export default function PasswordGenerator() {
                 </>
             )}
         <div className="spacer">
-            <label>Password Length {formData.length}</label>
+            <label>
+                <span>Password Length</span>
+            </label>
+            <div id ="length-display">{formData.length}</div>
             <input
                 type="range"
                 name="length"
