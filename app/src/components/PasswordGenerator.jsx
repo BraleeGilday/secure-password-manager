@@ -3,6 +3,7 @@ import axios from 'axios';
 
 export default function PasswordGenerator() {
     const getToken = () => localStorage.getItem('token');
+    const [copiedText, setCopiedText] = useState(false);
     const [formData, setFormData] = useState({
         length: 16,
         has_symbols: true,
@@ -11,6 +12,17 @@ export default function PasswordGenerator() {
     })
 
     const [password, setPassword] = useState(null);
+
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(password);
+            setCopiedText(true);
+
+            setTimeout(() => setCopiedText(false), 3000);
+        } catch (error) {
+            console.error("Failed to copy", error);
+        }
+    };
 
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
@@ -39,14 +51,15 @@ export default function PasswordGenerator() {
                 </>
             ) : (
                 <>
-                <div>
-                    {password}
+                <div className="pwd-box">
+                    <span id='pwd-txt'>{password}</span>
+                    <button onClick={handleCopy} className="copy-btn">{copiedText ? 'Copied!': 'Copy'}</button>
                 </div>
+
                 </>
             )}
-        <form onSubmit={handleSubmit}>
-            <button type="submit">{!password ? 'Generate' : 'Refresh'}</button>
-            <label>Password Length</label>
+        <div className="spacer">
+            <label>Password Length {formData.length}</label>
             <input
                 type="range"
                 name="length"
@@ -55,6 +68,9 @@ export default function PasswordGenerator() {
                 value={formData.length}
                 onChange={handleChange}
             />
+            <button type="button" onClick={handleSubmit}>{!password ? 'Generate' : 'Refresh'}</button>
+        </div>
+        <div className="spacer">
             <label>Symbols</label>
             <input 
                 type="checkbox"
@@ -76,7 +92,7 @@ export default function PasswordGenerator() {
                 checked={formData.mixed_case}
                 onChange={handleChange}
             />
-        </form>
+        </div>
         </div>
         </>
     )

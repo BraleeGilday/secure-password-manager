@@ -8,9 +8,9 @@ export default function Welcome() {
     return(
         <>
         <Card content={welcomeText} />
-        <div>
-            <PasswordGenerator />
-        </div>
+        
+        <PasswordGenerator />
+        
         </>
     )
 }

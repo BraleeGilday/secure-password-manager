@@ -69,12 +69,59 @@ main {
 
 /* --- PASSWORD GENERATOR */
 .pwd-gen-box {
-    max-width: 35rem;
-    max-height: fit-content;
+    max-width: 30rem;
+    min-width:25rem;
+    height: fit-content;
     border: 1.5px solid lightgray;
     border-radius: 15px;
-    padding: 1%;
+    padding: 2%;
     margin: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+.pwd-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-radius: 15px;
+    border: 1px solid purple;
+    padding: 1%;
+    margin-bottom: 1%;
+    font-weight: 700;
+    font-size:large;
+}
+#pwd-txt {
+    /* gemini suggestion for truncation */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.copy-btn {
+    background-color: purple;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size:medium;
+    font-weight: 700;
+}
+
+.copy-btn:hover {background-color: #6a0dad;}
+
+.spacer {
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1%;
+}
+
+.spacer label {
+    font-weight: 600;
 }
 
 /* --- FOOTER --- */
