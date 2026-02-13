@@ -1,1 +1,153 @@
 /* index.css will need to be adjusted, it's overriding styles */
+/* --- BODY --- */
+
+
+/* --- HEADER --- */
+
+header { padding: 1%; }
+
+.navbar {
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+}
+
+nav a {
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 2px;
+    padding: 3px 12px;
+    border: 1.5px solid;
+    font-weight: 700;
+}
+
+/* --- SEARCHBAR --- */
+
+.searchbar {
+    border-radius: 25px;
+    border: 2px solid black;
+    background-color: gainsboro; 
+    width: 50%;
+    height: 2rem;
+    padding: 1.5px 2%;
+    margin: 0 1%;
+    display:flex;
+
+}
+/* gemini suggestion for text input to match searchbar div */
+.searchbar input {
+    all: unset;
+    flex: 1;
+    min-width: 0;
+    height: 100%
+}
+
+/* --- MAIN --- */
+main {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- CARD --- */
+
+.card {
+    border-radius: 15px;
+    border: 1.5px solid lightgray;
+    max-width: 25rem;
+    max-height: fit-content;
+    padding: 1%;
+    /* may need to update */
+    margin: 5%; 
+}
+
+/* --- PASSWORD GENERATOR */
+.pwd-gen-dialog {
+    padding: 1%;
+    border:none;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    width: 35rem;
+    height:fit-content;
+}
+
+.pwd-gen-btn {
+    width:fit-content;
+    padding: 1%;
+    border: 1px solid purple;
+    border-radius: 15px;
+}
+
+.pwd-gen-box {
+    width:28rem;
+    height: fit-content;
+    border: none;
+    border-radius: 15px;
+    padding: 2%;
+    margin: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+.pwd-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-radius: 15px;
+    border: 1px solid purple;
+    padding: 1%;
+    margin-bottom: 1%;
+    font-weight: 700;
+    font-size:large;
+}
+#pwd-txt {
+    /* gemini suggestion for truncation */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.copy-btn {
+    background-color: purple;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size:medium;
+    font-weight: 700;
+}
+
+.copy-btn:hover {background-color: #6a0dad;}
+
+.spacer {
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1%;
+}
+
+.spacer label {
+    font-weight: 500;
+    font-size: medium;
+}
+
+.spacer #length-display {font-weight: 600; font-size:medium;}
+
+/* --- FOOTER --- */
+footer {
+    bottom: 0;
+    width: 100%;
+    height: 5rem;
+    text-align:center;
+    font-weight: 700;
+}
