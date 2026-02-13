@@ -167,7 +167,7 @@ def update_user_profile_route(
 
     updated = update_user_profile(
         db=db,
-        update_user=user_update,
+        update_profile=user_update,
         current_user=current_user,
     )
     return updated
@@ -182,7 +182,7 @@ def update_user_password_route(
     verify_user_access(current_user, user_id)
 
     try:
-        update_user_password(db=db, update=payload, current_user=current_user)
+        update_user_password(db=db, update_password=payload, current_user=current_user)
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

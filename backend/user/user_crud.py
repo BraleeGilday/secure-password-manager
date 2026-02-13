@@ -53,7 +53,7 @@ def update_user_password(db: Session, update_password: UserPasswordUpdate, curre
     if not password_hash.verify(update_password.current_password, user.password):
         raise ValueError("Incorrect password")
     
-    user.password = password_hash.hash(update_password.password)
+    user.password = password_hash.hash(update_password.new_password)
 
     db.commit()
     db.refresh(user)
