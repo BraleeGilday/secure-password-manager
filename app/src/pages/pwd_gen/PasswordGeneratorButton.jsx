@@ -1,11 +1,11 @@
 // for pwd gen modal
 import { useState } from "react";
 // ------
-import PasswordGeneratorModal from "./PasswordGeneratorModal"
+
 import PasswordGenerator from "./PasswordGenerator";
+import Modal from "../../components/Modal";
 
 export default function PasswordGeneratorButton() {
-     // PWD GEN MODAL
     const [activeModal, setActiveModal] = useState(false);
 
     const openPwdGenModal = () => {
@@ -16,15 +16,15 @@ export default function PasswordGeneratorButton() {
         setActiveModal(false);
     }
 
-    // -------------
     return (
         <>
         <button className="pwd-gen-btn" onClick={openPwdGenModal}>
         generator
         </button>
         {activeModal && (
-            <PasswordGeneratorModal 
+            <Modal 
                 close={closePwdGenModal}
+                dialogStyle={"pwd-gen-dialog"}
                 content={<PasswordGenerator />}
             />
         )}
