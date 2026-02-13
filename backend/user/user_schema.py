@@ -15,17 +15,21 @@ class UserCreate(BaseModel):
         return v
 
 
-class UserUpdate(BaseModel):
+# Profile UPDATE (email or display name) without password
+class UserProfileUpdate(BaseModel):
     email: EmailStr
-    password: str
     display_name: Optional[str] = None
 
-    @field_validator("password")
+# Password UPDATE requires current password and new password
+class UserPasswordUpdate(BaseModel):
+    current_password: str
+    new_password: str
+
+    @field_validator("current_password", "new_password")
     def password_not_blank(cls, v: str) -> str:
         if not v.strip():
             raise ValueError("Required field!")
         return v
-
 
 class UserResponse(BaseModel):
     id: str
