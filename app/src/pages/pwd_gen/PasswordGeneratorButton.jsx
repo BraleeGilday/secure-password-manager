@@ -1,6 +1,4 @@
-// for pwd gen modal
 import { useState } from "react";
-// ------
 
 import PasswordGenerator from "./PasswordGenerator";
 import Modal from "../../components/Modal";

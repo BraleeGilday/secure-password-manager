@@ -1,47 +1,22 @@
-import { useState } from "react"
-import axios from 'axios';
+import { PasswordGeneratorHook } from "./PasswordGeneratorHook";
+
+const Checkbox = ({label, name, checked, onChange}) => (
+    <>
+    <label>{label}</label>
+    <input 
+        type="checkbox"
+        name={name}
+        checked={checked}
+        onChange={onChange}
+    />
+    </>
+)
 
 export default function PasswordGenerator() {
-    const getToken = () => localStorage.getItem('token');
-    const [copiedText, setCopiedText] = useState(false);
-    const [formData, setFormData] = useState({
-        length: 16,
-        has_symbols: true,
-        has_numbers: true,
-        mixed_case: true,
-    })
-
-    const [password, setPassword] = useState(null);
-
-    const handleCopy = async () => {
-        try {
-            await navigator.clipboard.writeText(password);
-            setCopiedText(true);
-
-            setTimeout(() => setCopiedText(false), 3000);
-        } catch (error) {
-            console.error("Failed to copy", error);
-        }
-    };
-
-    const handleChange = (event) => {
-        const { name, value, type, checked } = event.target;
-        setFormData({
-            ...formData,
-            [name]: type === "checkbox" ? checked : value,
-        });
-    };
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            const response = await axios.post("http://127.0.0.1:8000/spm/password/generate", formData);
-            const generatedPassword = response.data;
-            setPassword(generatedPassword.password);
-        } catch (error) {
-            console.log("Error generating password");
-        }
-    }
+    const {
+        formData, password, copiedText,
+        handleChange, handleCopy, handleSubmit
+    } = PasswordGeneratorHook();
 
     return (
         <>
@@ -68,27 +43,9 @@ export default function PasswordGenerator() {
             <button type="button" onClick={handleSubmit}>{!password ? 'Generate' : 'Refresh'}</button>
         </div>
         <div className="spacer">
-            <label>Symbols</label>
-            <input 
-                type="checkbox"
-                name="has_symbols"
-                checked={formData.has_symbols}
-                onChange={handleChange}
-            />
-            <label>Numbers</label>
-            <input 
-                type="checkbox"
-                name="has_numbers"
-                checked={formData.has_numbers}
-                onChange={handleChange}
-            />
-            <label>Mixed case</label>
-            <input 
-                type="checkbox"
-                name="mixed_case"
-                checked={formData.mixed_case}
-                onChange={handleChange}
-            />
+            <Checkbox label="Symbols" name="has_symbols" checked={formData.has_symbols} onChange={handleChange} />
+            <Checkbox label="Numbers" name="has_numbers" checked={formData.has_numbers} onChange={handleChange} />
+            <Checkbox label="Mixed case" name="mixed_case" checked={formData.mixed_case} onChange={handleChange} />
         </div>
         </div>
         </>
