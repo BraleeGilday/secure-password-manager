@@ -1,24 +1,31 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { deleteMyAccount } from "../api/user"
 
 function DeleteAccountPage() {
-  const navigate = useNavigate();
-  const [confirmText, setConfirmText] = useState("");
+  const navigate = useNavigate()
+  const [confirmText, setConfirmText] = useState("")
+  const [error, setError] = useState("")
 
-  const handleDelete = (e) => {
-    e.preventDefault();
+  const handleDelete = async (e) => {
+    e.preventDefault()
+    setError("")
 
-    // Later: call backend delete endpoint
-    console.log("Would delete account now.");
-
-    navigate("/login");
-  };
+    try {
+      await deleteMyAccount()
+      localStorage.removeItem("access_token")
+      navigate("/login")
+    } catch (e) {
+      console.log(e)
+      setError(e?.response?.data?.detail || "Delete failed.")
+    }
+  }
 
   const isValid = confirmText.trim().toUpperCase() === "DELETE";
 
   return (
     <div className="form-container">
-      <h2>Delete Account</h2>
+      <h1 className="form-title">Delete Account</h1>
 
       <form onSubmit={handleDelete}>
         <p className="muted">
@@ -41,6 +48,7 @@ function DeleteAccountPage() {
           Back to Profile
         </p>
       </form>
+      {error && <p className="error-text">{error}</p>}
     </div>
   );
 }

@@ -1,24 +1,33 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { updateMyPassword } from "../api/user"
 
 function ChangePasswordPage() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("")
+  const [error, setError] = useState("")
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError("")
 
-    const payload = { current_password: currentPassword, new_password: newPassword };
-    console.log("PUT password update:", payload);
-
-    navigate("/profile");
-  };
+    try {
+      await updateMyPassword({
+        current_password: currentPassword,
+        new_password: newPassword,
+      })
+      navigate("/login")  // ???
+    } catch (e) {
+      console.log(e)
+      setError(e?.response?.data?.detail || "Password update failed.")
+    }
+  }
 
   return (
     <div className="form-container">
-      <h2>Change Password</h2>
+      <h1 className="form-title">Change Password</h1>
 
       <form onSubmit={handleSubmit}>
         <label>Current password</label>
@@ -43,6 +52,7 @@ function ChangePasswordPage() {
           Back to Profile
         </p>
       </form>
+      {error && <p className="error-text">{error}</p>}
     </div>
   );
 }

@@ -1,23 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { fetchMyProfile, updateMyProfile } from "../api/user";
 
 function EditDisplayNamePage() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("")
+  const [displayName, setDisplayName] = useState("") // keep unchanged
+  const [error, setError] = useState("")
 
-  const [displayName, setDisplayName] = useState("Test User");
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const u = await fetchMyProfile();
+        setEmail(u.email)
+        setDisplayName(u.display_name || "")
+      } catch (e) {
+        console.log(e)
+        setError("Could not load profile.")
+      }
+    }
+    load()
+  }, [])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("")
 
-    const payload = { email: "testUser@example.com", display_name: displayName.trim() || null };
-    console.log("PUT profile update:", payload);
-
-    navigate("/profile");
-  };
+    try {
+      await updateMyProfile({
+        email,
+        display_name: displayName || null,
+      })
+      navigate("/profile")
+    } catch(e) {
+        console.log(e)
+        setError(e?.response?.data?.detail || "Update failed.")
+    }
+  }
 
   return (
     <div className="form-container">
-      <h2>Update Display Name</h2>
+      <h1 className="form-title">Update Display Name</h1>
 
       <form onSubmit={handleSubmit}>
         <label>Display name</label>
@@ -33,8 +56,9 @@ function EditDisplayNamePage() {
           Back to Profile
         </p>
       </form>
+      {error && <p className="error-text">{error}</p>}
     </div>
-  );
+  )
 }
 
 export default EditDisplayNamePage;

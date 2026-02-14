@@ -1,14 +1,39 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaRegEnvelope, FaRegIdCard, FaLock, FaRegTrashCan } from "react-icons/fa6";
 import ProfileCard from "../components/ProfileCard";
+import { fetchMyProfile } from "../api/user";
 
 function UserProfilePage() {
   const navigate = useNavigate();
 
-  const user = {
-    email: "testUser@example.com",
-    display_name: "Test User",
-  };
+  const [user, setUser] = useState(null)
+  const [error, setError] = useState("")   // show token expired
+
+  useEffect( () => {
+    const load = async () => {
+      setError("")
+
+      const token = localStorage.getItem("access_token")
+      if (!token) {
+        navigate("/login")
+        return
+      }
+      
+      try {
+        const data = await fetchMyProfile()
+        setUser(data)
+      } catch (err) {
+        console.log(err)
+        setError("Could not load profile. Please log in again.")
+        localStorage.removeItem("access_token")
+        navigate("/login")
+      }
+    }
+    load()
+  }, [navigate])
+
+  if (!user) return <p className="error-text">{error || "No user found."}</p> // keep?
 
   return (
     <div className="profile-wrapper">
