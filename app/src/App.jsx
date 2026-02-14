@@ -5,8 +5,13 @@ import LoginPage from './pages/LoginPage.jsx'
 import CredentialsTempPage from './pages/CredentialsTempPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
 import UserProfilePage from './pages/UserProfilePage.jsx'
+import EditEmailPage from './pages/EditEmailPage.jsx'
+import EditDisplayNamePage from './pages/EditDisplayNamePage.jsx'
+import ChangePasswordPage from './pages/ChangePasswordPage.jsx'
+import DeleteAccountPage from './pages/DeleteAccountPage.jsx'
 
 function App() {
+
   return (
     <div>
       <Router>
@@ -14,13 +19,22 @@ function App() {
           <Routes>
 
             {/* Default route */}
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<Welcome />} />
 
-            {/* User Pages*/}
+            {/* Auth */}
             <Route path="/login" element={<LoginPage />}></Route>
             <Route path="/register" element={<RegisterPage />}></Route>
+
+            {/* User Pages */}
             <Route path="/profile" element={<UserProfilePage />}></Route>
+            <Route path="/profile/email" element={<EditEmailPage />} />
+            <Route path="/profile/name" element={<EditDisplayNamePage />} />
+            <Route path="/profile/password" element={<ChangePasswordPage />} />
+            <Route path="/profile/delete" element={<DeleteAccountPage />} />
+
+            {/* Temp - Delete */}
             <Route path="/credentials" element={<CredentialsTempPage />}></Route>
+            
           </Routes>
         </main>
       </Router>
