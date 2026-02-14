@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { registerUser } from "../api/auth";
 
 function RegisterPage() {
     const navigate = useNavigate()
@@ -8,19 +9,24 @@ function RegisterPage() {
     const [password, setPassword] = useState('')
     const [displayName, setDisplayName] = useState('')
 
-    const handleSubmit = (e) => {
+    const [error, setError] = useState("")
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        setError("")
 
-        const payload = {
-            email: email,
-            password: password,
-            display_name: displayName.trim() ? displayName.trim() : null,
+        try {
+            await registerUser({ email, password, displayName })
+            // TO-DO would like to add something here that allows them to sign in? 
+            // Or just go straight to credentials page?
+            navigate("/login")
+        } catch (err) {
+            console.log(err)
+            const msg =
+                err?.response?.data?.detail ||
+                "Registration failed. Please try again.";
+            setError(msg);
         }
-        
-        console.log('Register payload:', payload)
-
-        // Pretend we are authorized
-        navigate('/login')
     }
 
     return (
@@ -51,6 +57,7 @@ function RegisterPage() {
             <button type="submit">Create Account</button>
             <p className="form-link" onClick={() => navigate('/login')}>Back to Login</p>
         </form>
+        {error && <p className="error-text">{error}</p>}
     </div>
     )
 }

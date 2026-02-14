@@ -12,12 +12,24 @@ export async function loginUser(email, password) {
     form.append("password", password);
 
     // The Axios POST
-    const res = await api.post("/spm/user/login", form, {
+    const response = await api.post("/spm/user/login", form, {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
 
     // store token so you stay logged in
-    localStorage.setItem("access_token", res.data.access_token);
+    localStorage.setItem("access_token", response.data.access_token);
 
-    return res.data; // { access_token, token_type, username }
+    return response.data; // { access_token, token_type, username }
+}
+
+
+export async function registerUser({ email, password, displayName }) {
+  const payload = {
+    email: email,
+    password,
+    display_name: displayName.trim() ? displayName.trim() : null,
+  };
+
+  const response = await api.post("/spm/user/register", payload);
+  return response.data; // UserResponse: {id, email, display_name, created_at}
 }

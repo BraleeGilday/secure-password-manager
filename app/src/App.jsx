@@ -9,6 +9,7 @@ import EditEmailPage from './pages/EditEmailPage.jsx'
 import EditDisplayNamePage from './pages/EditDisplayNamePage.jsx'
 import ChangePasswordPage from './pages/ChangePasswordPage.jsx'
 import DeleteAccountPage from './pages/DeleteAccountPage.jsx'
+import Welcome from './pages/Welcome.jsx'
 
 function App() {
 

@@ -1,24 +1,29 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { loginUser } from '../api/auth';
+
 function LoginPage() {
     const navigate = useNavigate()
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState("")
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        setError("")
 
-        const payload = {
-            username: email,
-            password: password,
+        try {
+            await loginUser(email, password)
+            navigate("/credentials")
+        } catch (err) {
+            console.log(err)
+            const msg =
+                err?.response?.data?.detail ||
+                "Login failed. Check email/password"
+            setError(msg)
         }
-        
-        console.log('Login payload:', payload)
-
-        // Pretend we are authorized
-        navigate('/credentials')
     }
 
     return (
@@ -43,6 +48,7 @@ function LoginPage() {
             <button type="submit">Login</button>
             <p className="form-link" onClick={() => navigate('/register')}>Create Account</p>
         </form>
+        {error && <p className="error-text">{error}</p>}
     </div>
     )
 }
