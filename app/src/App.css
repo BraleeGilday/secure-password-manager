@@ -1,1 +1,154 @@
 /* index.css will need to be adjusted, it's overriding styles */
+
+/*Form styling adapted from https://www.w3schools.com/css/tryit.asp?filename=trycss_forms*/
+
+.form-container {
+  border-radius: 8px;
+  background-color: #f8f9fb;
+  padding: 32px;
+  padding-bottom: 10px;
+  max-width: 500px;
+  margin: 60px auto;  /* centers horizontally */
+}
+
+.form-title {
+  font-size: 2.5rem;
+  color: #AA00AA;
+  margin-top: 20px;
+  margin-bottom: 35px;
+}
+
+/* Labels stacked */
+label {
+  display: block;
+  margin-top: 8px;
+}
+
+/* Text inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Submit button */
+button[type="submit"] {
+  width: 100%;
+  background-color: #AA00AA;
+  color: white;
+  padding: 14px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #AA00BA;
+}
+
+.form-link {
+  margin: 0;
+  margin-top: 30px;
+  font-size: 0.9rem;
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: underline;
+  width: fit-content;
+}
+
+.form-link:hover {
+  color: #004999;
+}
+
+/* End of styling from w3schools */
+
+/* Profile Cards */
+/* Page wrapper */
+.profile-wrapper {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+/* Title */
+.profile-title {
+  text-align: center;
+  margin-bottom: 28px;
+  font-size: 2rem;
+}
+
+/* Stack of cards */
+.profile-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Card container */
+.profile-card {
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+/* Main content row (icon + text) */
+.profile-card-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 16px;
+}
+
+/* Icon column */
+.profile-icon {
+  width: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Text area */
+.profile-card-text {
+  flex: 1;
+}
+
+.profile-card-heading {
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 6px;
+}
+
+.profile-card-value {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Bottom link bar */
+.profile-link {
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  border: none;
+  border-top: 2px solid #ddd;
+  background: transparent;
+  color: #0b57d0;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.profile-link:hover {
+  text-decoration: underline;
+}
+
+.profile-card:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}

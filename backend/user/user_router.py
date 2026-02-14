@@ -15,7 +15,8 @@ from datetime import timedelta
 from database import get_db
 from user.user_crud import (
     create_user,
-    update_user,
+    update_user_profile,
+    update_user_password,
     delete_user,
     get_user_by_id,
     get_user_by_email,
@@ -23,22 +24,17 @@ from user.user_crud import (
     increment_login_attempts,
     reset_login_attempts,
 )
-from user.user_auth import get_current_user
+from user.user_auth import get_current_user, create_access_token
 
 from user.user_schema import (
     UserCreate,
-    UserUpdate,
+    UserProfileUpdate,
+    UserPasswordUpdate,
     UserResponse,
     Token,
 )
 
-from models import (
-    User,
-)
-
-from auth import (
-    create_access_token,
-)
+from models import User
 
 router = APIRouter(prefix="/spm/user")
 config = Config(".env")
@@ -69,7 +65,7 @@ def get_user_by_id_or_404(db: Session, user_id: str) -> User:
     return user
 
 
-# ----------------- CRUD -------------------
+# ----------------------- CRUD -------------------------
 
 
 # CREATE
@@ -97,7 +93,6 @@ def register_user(
         display_name=new_user.display_name,
         created_at=new_user.created_at,
     )
-
 
 @router.post("/login", response_model=Token)
 def login_for_access_token(
@@ -141,6 +136,68 @@ def login_for_access_token(
     return Token(access_token=access_token, token_type="bearer", username=user.email)
 
 
+# ----------------- ME (token-based) -------------------
+
+# READ
+@router.get("/me", response_model=UserResponse)
+def read_me(
+    current_user: User = Depends(get_current_user),
+) -> UserResponse:
+    return UserResponse(
+        id=current_user.id,
+        email=current_user.email,
+        display_name=current_user.display_name,
+        created_at=current_user.created_at,
+    )
+
+# UPDATE
+@router.put("/me", response_model=UserResponse)
+def update_me(
+    user_update: UserProfileUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> UserResponse:
+    existing = get_user_by_email(db, user_update.email)
+    if existing and existing.id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email already registered",
+        )
+
+    updated = update_user_profile(
+        db=db,
+        update_profile=user_update,
+        current_user=current_user,
+    )
+    return updated
+
+
+@router.put("/me/password", status_code=status.HTTP_204_NO_CONTENT)
+def update_my_password(
+    payload: UserPasswordUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    try:
+        update_user_password(db=db, update_password=payload, current_user=current_user)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect password",
+        )
+    return None
+
+# DELETE
+@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+def delete_me(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    delete_user(db, current_user)
+    return None
+
+# ---------------------------------------------------------
+
 # READ
 @router.get("/{user_id}", response_model=UserResponse)
 def read_user_route(
@@ -151,12 +208,11 @@ def read_user_route(
     verify_user_access(current_user, user_id)
     return get_user_by_id_or_404(db, user_id)
 
-
 # UPDATE
 @router.put("/{user_id}", response_model=UserResponse)
-def update_user_route(
+def update_user_profile_route(
     user_id: str,
-    user_update: UserUpdate,
+    user_update: UserProfileUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> UserResponse:
@@ -169,12 +225,31 @@ def update_user_route(
             detail="Email already registered",
         )
 
-    updated = update_user(
+    updated = update_user_profile(
         db=db,
-        update_user=user_update,
+        update_profile=user_update,
         current_user=current_user,
     )
     return updated
+
+@router.put("/{user_id}/password", status_code=status.HTTP_204_NO_CONTENT)
+def update_user_password_route(
+    user_id: str,
+    payload: UserPasswordUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    verify_user_access(current_user, user_id)
+
+    try:
+        update_user_password(db=db, update_password=payload, current_user=current_user)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect password",
+        )
+
+    return None
 
 
 # DELETE

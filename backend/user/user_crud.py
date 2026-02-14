@@ -3,7 +3,7 @@ from pwdlib import PasswordHash
 from sqlalchemy.orm import Session
 
 from models import User
-from user.user_schema import UserCreate, UserUpdate
+from user.user_schema import UserCreate, UserProfileUpdate, UserPasswordUpdate
 
 password_hash = PasswordHash.recommended()  # may be replaced
 
@@ -29,19 +29,36 @@ def create_user(db: Session, create_user: UserCreate) -> User:
     return new_user
 
 
-def update_user(db: Session, update_user: UserUpdate, current_user: User) -> User:
+def update_user_profile(db: Session, update_profile: UserProfileUpdate, current_user: User) -> User:
     """
-    update user (email, password, and display name)
+    update user (email and display name)
     """
     user = get_user_by_id(db, current_user.id)
 
-    user.email = update_user.email
-    user.password = password_hash.hash(update_user.password)
-    user.display_name = update_user.display_name
+    user.email = update_profile.email
+    user.display_name = update_profile.display_name
 
     db.commit()
     db.refresh(user)
     return user
+
+
+def update_user_password(db: Session, update_password: UserPasswordUpdate, current_user: User) -> User:
+    """
+    update user password (only)
+    """
+    user = get_user_by_id(db, current_user.id)
+
+    # Verify current password matches stored hash
+    if not password_hash.verify(update_password.current_password, user.password):
+        raise ValueError("Incorrect password")
+    
+    user.password = password_hash.hash(update_password.new_password)
+
+    db.commit()
+    db.refresh(user)
+    return user
+
 
 
 def delete_user(db: Session, current_user: User) -> None:
