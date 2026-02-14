@@ -37,7 +37,7 @@ function UserProfilePage() {
 
   return (
     <div className="profile-wrapper">
-      <h1 className="profile-title">Profile Info</h1>
+      <h1 className="profile-title">My Account</h1>
 
       <div className="profile-cards">
         <ProfileCard
