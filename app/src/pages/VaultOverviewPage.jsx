@@ -54,7 +54,7 @@ export default function VaultOverviewPage({ token, onLogout }) {
   return (
     <div>
       <div className="page-banner">
-        <h2>Password Vault Overview</h2>
+        <h2>Credential Vault Overview</h2>
       </div>
 
       <div className="vault-layout">

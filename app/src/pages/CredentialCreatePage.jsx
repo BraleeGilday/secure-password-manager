@@ -44,7 +44,7 @@ export default function CredentialCreatePage({ token, onLogout }) {
   return (
     <div>
       <div className="page-banner">
-        <h2>Password Entry</h2>
+        <h2>Create Credential</h2>
       </div>
 
       <div className="vault-layout">
