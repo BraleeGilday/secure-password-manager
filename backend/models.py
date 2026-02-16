@@ -1,4 +1,12 @@
-from sqlalchemy import Column, ForeignKey, String, Integer, DateTime, func, UniqueConstraint
+from sqlalchemy import (
+    Column,
+    ForeignKey,
+    String,
+    Integer,
+    DateTime,
+    func,
+    UniqueConstraint
+    )
 
 from sqlalchemy.orm import DeclarativeBase, relationship
 import uuid
@@ -29,12 +37,20 @@ class Credential(Base):
     """
 
     __tablename__ = "credential"
-    # Disallow credentials with duplicate usernames if for the exact same site (different sites can use duplicate usernames)
+    # Disallow credentials with duplicate usernames if for the exact same site 
+    # (different sites can use duplicate usernames)
     __table_args__ = (
-        UniqueConstraint("user_id", "site", "username", name="uq_credential_user_site_username"),
+        UniqueConstraint(
+            "user_id", "site",
+            "username",
+            name="uq_credential_user_site_username"),
     )
 
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(
+        String(36),
+        primary_key=True,
+        default=lambda: str(uuid.uuid4())
+        )
     site = Column(String, nullable=False)
     username = Column(String, nullable=False)
     password = Column(String, nullable=False)
