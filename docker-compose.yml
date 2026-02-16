@@ -1,0 +1,35 @@
+# version 1
+
+services:
+  db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/backend
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=database
+
+  frontend:
+    build:
+      context: ./app
+    ports:
+      - "5173:80"
+    volumes:
+      - ./app:/app
+      - ./app/node_modules
+    environment:
+      - APP_FASTAPI_URL=http://127.0.0.1:8000
+    depends_on:
+      - backend
+    
