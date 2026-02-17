@@ -23,7 +23,7 @@ from user.user_crud import (
     increment_login_attempts,
     reset_login_attempts,
 )
-from user.user_auth import get_current_user
+from user.user_auth import get_current_user, create_access_token
 
 from user.user_schema import (
     UserCreate,
@@ -32,13 +32,7 @@ from user.user_schema import (
     Token,
 )
 
-from models import (
-    User,
-)
-
-from auth import (
-    create_access_token,
-)
+from models import User
 
 router = APIRouter(prefix="/spm/user")
 config = Config(".env")
