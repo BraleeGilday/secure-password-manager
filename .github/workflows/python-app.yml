@@ -12,6 +12,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: test_db
+      POSTGRES_HOST: localhost
+      POSTGRES_ENGINE: postgresql+psycopg2
 
     steps:
     - uses: actions/checkout@v4
