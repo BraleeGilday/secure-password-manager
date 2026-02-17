@@ -26,6 +26,7 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                     <nav>
                         <div>
                             {/* <Link>logout</Link> */}
+                            <a>profile</a>
                             <a onClick={handleLogout}>logout</a>
                         </div>
                     </nav>
