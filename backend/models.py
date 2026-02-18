@@ -37,7 +37,7 @@ class Credential(Base):
     """
 
     __tablename__ = "credential"
-    # Disallow credentials with duplicate usernames if for the exact same site 
+    # Disallow credentials with duplicate usernames if for the exact same site
     # (different sites can use duplicate usernames)
     __table_args__ = (
         UniqueConstraint(
