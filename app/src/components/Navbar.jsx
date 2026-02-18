@@ -25,7 +25,9 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                     <Searchbar />
                     <nav>
                         <div>
-                            {/* <Link>logout</Link> */}
+                            {/* TODO: UPDATE to 
+                            <LINK>profile</LINK>
+                            <Link>logout</Link> */}
                             <a>profile</a>
                             <a onClick={handleLogout}>logout</a>
                         </div>

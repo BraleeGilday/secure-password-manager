@@ -2,7 +2,7 @@ import { PasswordGeneratorHook } from "./PasswordGeneratorHook";
 
 const Checkbox = ({label, name, checked, onChange}) => (
     <>
-    <label>{label}</label>
+    <label for={name}>{label}</label>
     <input 
         type="checkbox"
         name={name}
@@ -28,7 +28,7 @@ export default function PasswordGenerator() {
                 </div>
             )}
         <div className="spacer">
-            <label>
+            <label for="length">
                 Password Length
             </label>
             <div id ="length-display">{formData.length}</div>

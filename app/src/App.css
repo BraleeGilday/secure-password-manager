@@ -1,4 +1,10 @@
 /* index.css will need to be adjusted, it's overriding styles */
+/* --- ROOT --- */
+:root { 
+    --magenta:     rgba(170, 0, 186);
+    --purple:      rgba(93, 13, 173);
+}
+
 /* --- BODY --- */
 
 
@@ -81,7 +87,7 @@ main {
 .pwd-gen-btn {
     width:fit-content;
     padding: 1%;
-    border: 1px solid purple;
+    border: 1px solid var(--magenta);
     border-radius: 15px;
 }
 
@@ -102,7 +108,7 @@ main {
     justify-content: space-between;
     gap: 10px;
     border-radius: 15px;
-    border: 1px solid purple;
+    border: 1px solid var(--magenta);
     padding: 1%;
     margin-bottom: 1%;
     font-weight: 700;
@@ -116,7 +122,7 @@ main {
 }
 
 .copy-btn {
-    background-color: purple;
+    background-color: var(--magenta);
     color: white;
     border: none;
     border-radius: 8px;
@@ -127,7 +133,7 @@ main {
     font-weight: 700;
 }
 
-.copy-btn:hover {background-color: #6a0dad;}
+.copy-btn:hover {background-color: var(--purple);}
 
 .spacer {
     display:flex;

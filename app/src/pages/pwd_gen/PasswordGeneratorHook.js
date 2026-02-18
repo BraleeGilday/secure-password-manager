@@ -29,10 +29,14 @@ export const PasswordGeneratorHook = () => {
     };
 
     const handleChange = (event) => {
-        const { name, value, type, checked } = event.target;
+        const { name, value, valueAsNumber, type, checked } = event.target;
         setFormData({
             ...formData,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: type === "checkbox" 
+                ? checked 
+                : name === "length"
+                    ? valueAsNumber
+                    : value,
         });
     };
 
