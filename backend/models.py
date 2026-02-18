@@ -42,8 +42,7 @@ class Credential(Base):
     __table_args__ = (
         UniqueConstraint(
             "user_id", "site",
-            "username",
-            name="uq_credential_user_site_username"),
+            "username", name="uq_credential_user_site_username"),
     )
 
     id = Column(
