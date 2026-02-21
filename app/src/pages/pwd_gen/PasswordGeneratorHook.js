@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const DATABASE_URL = "http://127.0.0.1:8000"
+// const DATABASE_URL = "http://127.0.0.1:8000"
+// for use with nginx
+const DATABASE_URL = "";
 
 // custom hook to handle copy, change, submit for password generator
 // add loading? 
