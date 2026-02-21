@@ -9,3 +9,4 @@ node_modules
 
 # SQLite database
 spm.db
+.DS_Store
