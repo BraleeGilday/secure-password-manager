@@ -5,7 +5,7 @@ __pycache__
 alembic
 migrations
 node_modules
-.env
+*.env*
 
 # SQLite database
 spm.db
