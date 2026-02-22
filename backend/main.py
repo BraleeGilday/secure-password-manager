@@ -3,8 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from pwd_generator import pwd_gen_router
 
 from user.user_router import router as user_router
-
-from user.user_router import router as user_router
 from credential.credential_router import router as credential_router
 
 # https://fastapi.tiangolo.com/tutorial/cors/#use-corsmiddleware
@@ -16,10 +14,8 @@ app = FastAPI()
 # will need to see how to redo for cloud deployment
 # (as simple as containerize + nginx?)
 origins = [
+    "http://localhost:8000",
     "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:8000"
-
 ]
 
 app.add_middleware(
