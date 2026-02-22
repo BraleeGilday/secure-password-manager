@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { fetchMyProfile, updateMyProfile } from "../api/user"
 
+import FormLink from '../components/FormLink';
+
 // TO-DO
 // Add a confirmation to this page and instructions that
 // Upon changing their email, they'll be signed out and 
@@ -58,9 +60,8 @@ function EditEmailPage() {
 
         <button type="submit">Save</button>
 
-        <p className="form-link" onClick={() => navigate("/profile")}>
-          Back to Profile
-        </p>  {/* Could add: Are you sure? Unsaved changes */}
+        <FormLink to="/profile">Back to Profile</FormLink>
+
       </form>
       {error && <p className="error-text">{error}</p>}
     </div>

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { loginUser } from '../api/auth';
 
+import FormLink from '../components/FormLink';
+
 function LoginPage() {
     const navigate = useNavigate()
 
@@ -46,7 +48,9 @@ function LoginPage() {
                 required
             />
             <button type="submit">Login</button>
-            <p className="form-link" onClick={() => navigate('/register')}>Create Account</p>
+
+            <FormLink to="/register">Create Account</FormLink>
+
         </form>
         {error && <p className="error-text">{error}</p>}
     </div>

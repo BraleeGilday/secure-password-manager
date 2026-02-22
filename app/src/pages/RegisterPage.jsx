@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from "../api/auth";
 
+import FormLink from '../components/FormLink';
+
 function RegisterPage() {
     const navigate = useNavigate()
 
@@ -17,8 +19,6 @@ function RegisterPage() {
 
         try {
             await registerUser({ email, password, displayName })
-            // TO-DO would like to add something here that allows them to sign in? 
-            // Or just go straight to credentials page?
             navigate("/login")
         } catch (err) {
             console.log(err)
@@ -55,7 +55,8 @@ function RegisterPage() {
                 onChange={(e) => setDisplayName(e.target.value)}
             />
             <button type="submit">Create Account</button>
-            <p className="form-link" onClick={() => navigate('/login')}>Back to Login</p>
+
+            <FormLink to="/login">Back to Login</FormLink>
         </form>
         {error && <p className="error-text">{error}</p>}
     </div>

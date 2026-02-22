@@ -4,6 +4,8 @@ import { FaRegEnvelope, FaRegIdCard, FaLock, FaRegTrashCan } from "react-icons/f
 import ProfileCard from "../components/ProfileCard";
 import { fetchMyProfile } from "../api/user";
 
+import FormLink from "../components/FormLink";
+
 function UserProfilePage() {
   const navigate = useNavigate();
 
@@ -72,10 +74,9 @@ function UserProfilePage() {
           onClick={() => navigate("/profile/delete")}
         />
       </div>
-      <p className="form-link" onClick={() => navigate("/credentials")}>
-        Back to Credentials
-      </p>
 
+      <FormLink to="/credentials">Back to Credentials</FormLink>
+      
     </div>
   );
 }

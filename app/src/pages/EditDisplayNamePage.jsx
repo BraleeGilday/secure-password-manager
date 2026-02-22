@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchMyProfile, updateMyProfile } from "../api/user";
 
+import FormLink from "../components/FormLink";
+
 function EditDisplayNamePage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("")
@@ -52,9 +54,7 @@ function EditDisplayNamePage() {
 
         <button type="submit">Save</button>
 
-        <p className="form-link" onClick={() => navigate("/profile")}>
-          Back to Profile
-        </p>
+        <FormLink to="/profile">Back to Profile</FormLink>
       </form>
       {error && <p className="error-text">{error}</p>}
     </div>
