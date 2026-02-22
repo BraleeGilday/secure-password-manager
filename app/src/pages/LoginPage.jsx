@@ -6,7 +6,7 @@ import { loginUser } from '../api/auth';
 import FormLink from '../components/FormLink';
 import ErrorText from '../components/ErrorText';
 
-function LoginPage() {
+function LoginPage( { setIsLoggedIn } ) {
     const navigate = useNavigate()
 
     const [email, setEmail] = useState('')
@@ -19,6 +19,7 @@ function LoginPage() {
 
         try {
             await loginUser(email, password)
+            setIsLoggedIn(true)
             navigate("/credentials")
         } catch (err) {
             console.log(err)
