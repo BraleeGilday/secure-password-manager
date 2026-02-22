@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../api/auth';
 
 import FormLink from '../components/FormLink';
+import ErrorText from '../components/ErrorText';
 
 function LoginPage() {
     const navigate = useNavigate()
@@ -52,7 +53,7 @@ function LoginPage() {
             <FormLink to="/register">Create Account</FormLink>
 
         </form>
-        {error && <p className="error-text">{error}</p>}
+        <ErrorText>{error}</ErrorText>
     </div>
     )
 }

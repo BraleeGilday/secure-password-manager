@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { updateMyPassword } from "../api/user"
 
 import FormLink from "../components/FormLink"
+import ErrorText from "../components/ErrorText"
 
 function ChangePasswordPage() {
   const navigate = useNavigate()
@@ -47,12 +48,10 @@ function ChangePasswordPage() {
           onChange={(e) => setNewPassword(e.target.value)}
           required
         />
-
         <button type="submit">Save</button>
-        
         <FormLink to="/profile">Back to Profile</FormLink>
       </form>
-      {error && <p className="error-text">{error}</p>}
+      <ErrorText>{error}</ErrorText>
     </div>
   );
 }

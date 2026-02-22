@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { deleteMyAccount } from "../api/user"
 
 import FormLink from "../components/FormLink"
+import ErrorText from "../components/ErrorText"
 
 function DeleteAccountPage() {
   const navigate = useNavigate()
@@ -49,7 +50,7 @@ function DeleteAccountPage() {
         <FormLink to="/profile">Back to Profile</FormLink>
 
       </form>
-      {error && <p className="error-text">{error}</p>}
+      <ErrorText>{error}</ErrorText>
     </div>
   );
 }

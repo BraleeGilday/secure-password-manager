@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchMyProfile, updateMyProfile } from "../api/user";
 
 import FormLink from "../components/FormLink";
+import ErrorText from "../components/ErrorText";
 
 function EditDisplayNamePage() {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ function EditDisplayNamePage() {
 
         <FormLink to="/profile">Back to Profile</FormLink>
       </form>
-      {error && <p className="error-text">{error}</p>}
+      <ErrorText>{error}</ErrorText>
     </div>
   )
 }
