@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // const DATABASE_URL = "http://127.0.0.1:8000"
 // for use with nginx
-const DATABASE_URL = "";
+const BACKEND_URL = "";
 
 // custom hook to handle copy, change, submit for password generator
 // add loading? 
@@ -45,7 +45,7 @@ export const PasswordGeneratorHook = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(`${DATABASE_URL}/spm/password/generate`, formData);
+            const response = await axios.post(`${BACKEND_URL}/spm/password/generate`, formData);
             const generatedPassword = response.data;
             setPassword(generatedPassword.password);
         } catch (error) {

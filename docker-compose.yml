@@ -1,3 +1,5 @@
+# based on Docker blog post: https://www.docker.com/blog/how-to-dockerize-react-app/
+
 services:
   db:
     image: postgres:15
