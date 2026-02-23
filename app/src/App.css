@@ -173,6 +173,8 @@ footer {
   padding-bottom: 10px;
   max-width: 500px;
   margin: 60px auto;  /* centers horizontally */
+  border: 1px solid #e3e6eb;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 
 .form-title {

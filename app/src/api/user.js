@@ -39,17 +39,13 @@ const response = await api.put(
     {
       headers: getAuthHeaders(),
     }
-)
-
-  return response.data  // Backend returns 204 No Content on success
+  )
 }
 
 export async function deleteMyAccount() {
 const response = await api.delete(
     "/spm/user/me", 
     {headers: getAuthHeaders()}
-)
-
-  return response.data  // Backend returns 204 No Content on success
+  )
 }
 

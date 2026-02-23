@@ -27,9 +27,16 @@ function UserProfilePage() {
         setUser(data)
       } catch (err) {
         console.log(err)
-        setError("Could not load profile. Please log in again.")
-        localStorage.removeItem("access_token")
-        navigate("/login")
+
+        const status = err?.response?.status
+
+        if (status === 401 || status === 403) {
+          setError("Session expired. Please log in again.")
+          localStorage.removeItem("access_token")
+          navigate("/login", { replace: true })
+        } else {
+          setError("Could not load profile. Please try again.")
+        }
       }
     }
     load()
