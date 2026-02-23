@@ -12,9 +12,7 @@ export async function loginUser(email, password) {
     form.append("password", password);
 
     // The Axios POST
-    const response = await api.post("/spm/user/login", form, {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    });
+    const response = await api.post("/spm/user/login", form);
 
     // store token so you stay logged in
     localStorage.setItem("access_token", response.data.access_token);
