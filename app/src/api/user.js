@@ -7,7 +7,7 @@ function getAuthHeaders() {
 }
 
 export async function fetchMyProfile() {
-  const response = await api.get("/spm/user/me", {
+  const response = await api.get("/spm/user", {
     headers: getAuthHeaders(),
   })
 
@@ -16,7 +16,7 @@ export async function fetchMyProfile() {
 
 export async function updateMyProfile({ email, display_name }) {
 const response = await api.put(
-    "/spm/user/me", 
+    "/spm/user", 
     {
       email,
       display_name: display_name?.trim() ? display_name.trim() : null,
@@ -31,7 +31,7 @@ const response = await api.put(
 
 export async function updateMyPassword({ current_password, new_password }) {
 const response = await api.put(
-    "/spm/user/me/password", 
+    "/spm/user/password", 
     {
       current_password,
       new_password,
@@ -44,7 +44,7 @@ const response = await api.put(
 
 export async function deleteMyAccount() {
 const response = await api.delete(
-    "/spm/user/me", 
+    "/spm/user", 
     {headers: getAuthHeaders()}
   )
 }

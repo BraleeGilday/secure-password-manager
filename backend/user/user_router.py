@@ -135,12 +135,9 @@ def login_for_access_token(
     )
     return Token(access_token=access_token, token_type="bearer", username=user.email)
 
-
-# ----------------- ME (token-based) -------------------
-
-# READ
-@router.get("/me", response_model=UserResponse)
-def read_me(
+# READ current user
+@router.get("", response_model=UserResponse)
+def read_current_user(
     current_user: User = Depends(get_current_user),
 ) -> UserResponse:
     return UserResponse(
@@ -150,9 +147,9 @@ def read_me(
         created_at=current_user.created_at,
     )
 
-# UPDATE
-@router.put("/me", response_model=UserResponse)
-def update_me(
+# UPDATE current user
+@router.put("", response_model=UserResponse)
+def update_current_user(
     user_update: UserProfileUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -172,8 +169,8 @@ def update_me(
     return updated
 
 
-@router.put("/me/password", status_code=status.HTTP_204_NO_CONTENT)
-def update_my_password(
+@router.put("/password", status_code=status.HTTP_204_NO_CONTENT)
+def update_current_password(
     payload: UserPasswordUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -187,9 +184,9 @@ def update_my_password(
         )
     return None
 
-# DELETE
-@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
-def delete_me(
+# DELETE current user
+@router.delete("", status_code=status.HTTP_204_NO_CONTENT)
+def delete_current_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -197,6 +194,7 @@ def delete_me(
     return None
 
 # ---------------------------------------------------------
+# Currently unused routes
 
 # READ
 @router.get("/{user_id}", response_model=UserResponse)
