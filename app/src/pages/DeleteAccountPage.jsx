@@ -24,7 +24,7 @@ function DeleteAccountPage() {
     }
   }
 
-  const isValid = confirmText.trim().toUpperCase() === "DELETE";
+  const isValid = confirmText === "DELETE";
 
   return (
     <div className="form-container">
