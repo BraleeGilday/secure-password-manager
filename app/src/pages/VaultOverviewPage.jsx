@@ -1,20 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
+import api from '../api/client';
 import CredentialRow from '../components/CredentialRow';
 
 export default function VaultOverviewPage({ token, onLogout }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [credentials, setCredentials] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const searchTerm = (searchParams.get('search') || '').trim();
 
-  const fetchCredentials = useCallback(
+  const fetchCredentialsSearch = useCallback(
     async (term) => {
       const query = term ? `?search=${encodeURIComponent(term)}` : '';
 
-      const response = await axios.get(`/spm/credentials/${query}`, {
+      const response = await api.get(`/spm/credentials/${query}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -23,7 +24,7 @@ export default function VaultOverviewPage({ token, onLogout }) {
 
       if (response.status === 401) {
         onLogout();
-        navigate('/', { state: { message: 'Session expired, paste a token again' } });
+        navigate('/', { state: { message: 'Session expired, paste new token' } });
         return;
       }
 
@@ -32,27 +33,17 @@ export default function VaultOverviewPage({ token, onLogout }) {
         return;
       }
 
-      setCredentials(response.data);
+      setCredentials(Array.isArray(response.data) ? response.data : []);
     },
     [token, onLogout, navigate]
   );
 
   useEffect(() => {
-    fetchCredentials('');
-  }, [fetchCredentials]);
-
-  const handleLogoutClick = () => {
-    onLogout();
-    navigate('/');
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    fetchCredentials(searchTerm);
-  };
+    fetchCredentialsSearch(searchTerm);
+  }, [fetchCredentialsSearch, searchTerm]);
 
   return (
-    <div>
+    <div className="vault-page">
       <div className="page-banner">
         <h2>Credential Vault Overview</h2>
       </div>
@@ -60,30 +51,23 @@ export default function VaultOverviewPage({ token, onLogout }) {
       <div className="vault-layout">
         <aside className="card">
           <h3>Vault Options</h3>
-          <button className="btn" type="button" onClick={handleLogoutClick}>
-            Logout
-          </button>
+          <Link className="btn" to="/credentials/new">
+            Add Credential
+          </Link>
         </aside>
 
         <section className="vault-content">
           <div className="card">
-            <p>Search for a password or choose from your favorite below...</p>
-
-            <form className="search-form" onSubmit={handleSearchSubmit}>
-              <input
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search by site..."
-              />
-
-              <button className="btn" type="submit">
-                Submit
-              </button>
-
-              <Link className="btn" to="/credentials/new">
-                Add
-              </Link>
-            </form>
+            <p style={{ marginTop: 0 }}>
+              Use the search bar above to search credentials by site.
+            </p>
+            {searchTerm ? (
+              <p style={{ marginBottom: 0 }}>
+                Showing results for: <strong>{searchTerm}</strong>
+              </p>
+            ) : (
+              <p style={{ marginBottom: 0 }}>Showing all credentials.</p>
+            )}
           </div>
 
           <div className="cred-list">

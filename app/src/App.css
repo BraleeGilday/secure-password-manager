@@ -1,34 +1,202 @@
-/* Credential CSS (to be changed later) */
-
-#root {
-  display: flex;
-  flex-direction: column;
+/* index.css will need to be adjusted, it's overriding styles */
+/* --- ROOT --- */
+:root { 
+    --magenta:     rgba(170, 0, 186);
+    --purple:      rgba(93, 13, 173);
 }
 
-main,
+/* --- BODY --- */
+
+
+/* --- HEADER --- */
+
+header { padding: 1%; }
+
+.navbar {
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+}
+
+nav a {
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 2px;
+    padding: 3px 12px;
+    border: 1.5px solid;
+    font-weight: 700;
+}
+
+/* --- SEARCHBAR --- */
+
+.searchbar {
+    border-radius: 25px;
+    border: 2px solid black;
+    background-color: gainsboro; 
+    width: 50%;
+    height: 2rem;
+    padding: 1.5px 2%;
+    margin: 0 1%;
+    display:flex;
+
+}
+/* gemini suggestion for text input to match searchbar div */
+.searchbar input {
+    all: unset;
+    flex: 1;
+    min-width: 0;
+    height: 100%
+}
+
+/* --- MAIN --- */
+main {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- CARD --- */
+
+.card {
+    border-radius: 15px;
+    border: 1.5px solid lightgray;
+    max-width: 25rem;
+    max-height: fit-content;
+    padding: 1%;
+    /* may need to update */
+    margin: 5%; 
+}
+
+/* --- PASSWORD GENERATOR */
+.pwd-gen-dialog {
+    padding: 1%;
+    border:none;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    width: 35rem;
+    height:fit-content;
+}
+
+.pwd-gen-btn {
+    width:fit-content;
+    padding: 1%;
+    border: 1px solid var(--magenta);
+    border-radius: 15px;
+}
+
+.pwd-gen-box {
+    width:28rem;
+    height: fit-content;
+    border: none;
+    border-radius: 15px;
+    padding: 2%;
+    margin: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+.pwd-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-radius: 15px;
+    border: 1px solid var(--magenta);
+    padding: 1%;
+    margin-bottom: 1%;
+    font-weight: 700;
+    font-size:large;
+}
+#pwd-txt {
+    /* gemini suggestion for truncation */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.copy-btn {
+    background-color: var(--magenta);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size:medium;
+    font-weight: 700;
+}
+
+.copy-btn:hover {background-color: var(--purple);}
+
+.spacer {
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1%;
+}
+
+.spacer label {
+    font-weight: 500;
+    font-size: medium;
+}
+
+.spacer #length-display {font-weight: 600; font-size:medium;}
+
+/* --- FOOTER --- */
 footer {
+    bottom: 0;
+    width: 100%;
+    height: 5rem;
+    text-align:center;
+    font-weight: 700;
+}
+
+
+/* ------------------------------------------------- Credential/Vault CSS (scoped to credentials ONLY, change to user styles? will look more later) -------------------------------------------------- */
+
+/* --- Page wrapper --- */
+.vault-page {
   width: min(1200px, 100%);
   margin: 0 auto;
   padding: 16px;
   box-sizing: border-box;
+  align-self: stretch;
+  height: 100%;
+  overflow: auto;
 }
 
-.page-banner {
-  text-align: center;
-  margin: 16px 0;
-}
-
-.page-banner h2 {
+/* --- Card --- */
+.vault-page .card {
   margin: 0;
-}
-
-.card {
-  border: 1px solid currentColor;
+  max-width: none;
+  width: 100%;
   padding: 16px;
   box-sizing: border-box;
 }
 
-.btn {
+.vault-page .card h3 {
+  margin-top: 0;
+}
+
+/* --- Banner --- */
+.vault-page .page-banner {
+  text-align: center;
+  margin: 16px 0;
+}
+
+.vault-page .page-banner h2 {
+  margin: 0;
+}
+
+/* --- Buttons/links --- */
+.vault-page .btn {
   display: inline-block;
   padding: 8px 12px;
   border: 1px solid currentColor;
@@ -38,50 +206,39 @@ footer {
   cursor: pointer;
 }
 
-/* Center column layout (nav left of center, vault in center) */
-.vault-layout {
+/* --- Center column layout (nav left of center, vault in center, no right block) --- */
+.vault-page .vault-layout {
   display: grid;
-  grid-template-columns: 1fr minmax(0, 720px) 1fr;
-  gap: 16px;
+  grid-template-columns: minmax(240px, 1fr) minmax(0, 720px) minmax(240px, 1fr);
+  gap: 24px;
   align-items: start;
 }
 
-.vault-layout > aside {
+.vault-page .vault-layout > aside {
   grid-column: 1;
   justify-self: end;
   width: min(240px, 100%);
 }
 
-.vault-layout > section {
+.vault-page .vault-layout > section {
   grid-column: 2;
   min-width: 0;
 }
 
-.vault-content {
+.vault-page .vault-content {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.search-form {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.search-form input {
-  flex: 1;
-  min-width: 200px;
-}
-
-.cred-list {
+/* --- Credential list --- */
+.vault-page .cred-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.cred-row {
+.vault-page .cred-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -93,50 +250,76 @@ footer {
   box-sizing: border-box;
 }
 
-.field {
+/* --- Form fields --- */
+.vault-page .field {
   display: flex;
   flex-direction: column;
   gap: 6px;
   margin-top: 12px;
 }
 
-input,
-textarea {
+.vault-page input,
+.vault-page textarea {
   width: 100%;
   padding: 8px;
   border: 1px solid currentColor;
   box-sizing: border-box;
 }
 
-.password-row {
+.vault-page .password-row {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-.password-row input {
+.vault-page .password-row input {
   flex: 1;
 }
 
-.card-header {
+.vault-page .pwd-gen-inline {
+  margin-top: 10px;
+}
+
+/* --- Entry card header --- */
+.vault-page .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
 }
 
-.card-actions {
+.vault-page .card-actions {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.notes-block {
-  border: 1px solid currentColor;
-  padding: 8px;
+/* View notes block */
+.vault-page .notes-block {
+  width: 100%;
+  min-height: 70px;
+  max-height: 160px;
+  overflow-y: auto;        /* scroll when too long */
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   box-sizing: border-box;
-  max-width: 100%;
+  background: #f2f2f2; /* greyed out to match disabled inputs on view */
+  white-space: pre-wrap;   /* keep line breaks */
   overflow-wrap: anywhere;
-  word-break: break-word;
-  white-space: pre-wrap;
+}
+
+/* Empty notes block placeholder */
+.vault-page .notes-block.notes-empty {
+  color: #777;
+  font-style: italic;
+}
+
+/* Create/Edit notes block */
+.vault-page .notes-textarea {
+  width: 100%;
+  min-height: 140px;
+  max-height: 240px;    /* limit drag */
+  resize: vertical;     /* prevent sideways drag */
+  overflow-y: auto;     /* scroll when too long */
 }

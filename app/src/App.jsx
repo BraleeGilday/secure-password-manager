@@ -1,23 +1,17 @@
-import './App.css';
-
 import { useState } from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-} from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
-// Remove this homepage later with real User one
-import HomePage from './pages/HomePage';
-
+import Welcome from './pages/Welcome';
 import VaultOverviewPage from './pages/VaultOverviewPage';
 import CredentialEntryPage from './pages/CredentialEntryPage';
 import CredentialCreatePage from './pages/CredentialCreatePage';
 import CredentialEditPage from './pages/CredentialEditPage';
 
-const TOKEN_KEY = 'spm_token';
+import './App.css';
+
+const TOKEN_KEY = 'token';
 
 function getSavedToken() {
   return localStorage.getItem(TOKEN_KEY) || '';
@@ -42,7 +36,7 @@ function RequireAuth({ token, children }) {
   return children;
 }
 
-export default function App() {
+function App() {
   const [token, setToken] = useState(getSavedToken());
 
   const saveToken = (newToken) => {
@@ -55,14 +49,16 @@ export default function App() {
     setToken('');
   };
 
+  const isLoggedIn = Boolean(token);
+
   return (
-    <Router>
-      <main>
+    <>
+    <Navbar isLoggedIn={isLoggedIn} onLogout={logout} />
+    <main>
+        {/* Routers */}
         <Routes>
-          <Route
-            path="/"
-            element={<HomePage token={token} onSaveToken={saveToken} onClearToken={logout} />}
-          />
+          <Route path="/" element={<Welcome token={token} onSaveToken={saveToken} />} />
+
           <Route
             path="/credentials"
             element={
@@ -96,10 +92,10 @@ export default function App() {
             }
           />
         </Routes>
-      </main>
-      <footer>
-        <p>&copy; 2026 Secure Password Manager</p>
-      </footer>
-    </Router>
-  );
+    </main>
+    <Footer />
+    </>
+  )
 }
+
+export default App

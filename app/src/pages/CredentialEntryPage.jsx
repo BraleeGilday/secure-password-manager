@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+
+import api from '../api/client';
 
 export default function CredentialEntryPage({ token, onLogout }) {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ export default function CredentialEntryPage({ token, onLogout }) {
 
   useEffect(() => {
     async function fetchCredential() {
-      const response = await axios.get(`/spm/credentials/${id}`, {
+      const response = await api.get(`/spm/credentials/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -23,7 +24,7 @@ export default function CredentialEntryPage({ token, onLogout }) {
 
       if (response.status === 401) {
         onLogout();
-        navigate('/', { state: { message: 'Session expired, paste a token again' } });
+        navigate('/', { state: { message: 'Session expired, paste new token' } });
         return;
       }
 
@@ -32,7 +33,6 @@ export default function CredentialEntryPage({ token, onLogout }) {
       }
 
       const data = response.data;
-
       setSite((data && data.site) || '');
       setUsername((data && data.username) || '');
       setPassword((data && data.password) || '');
@@ -43,7 +43,10 @@ export default function CredentialEntryPage({ token, onLogout }) {
   }, [id, token, navigate, onLogout]);
 
   const handleDelete = async () => {
-    const response = await axios.delete(`/spm/credentials/${id}`, {
+    const ok = window.confirm(`Delete credential "${site}" (${username})? This cannot be undone.`);
+    if (!ok) return;
+    
+    const response = await api.delete(`/spm/credentials/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -52,18 +55,17 @@ export default function CredentialEntryPage({ token, onLogout }) {
 
     if (response.status === 401) {
       onLogout();
-      navigate('/', { state: { message: 'Session expired, paste token' } });
+      navigate('/', { state: { message: 'Session expired, paste new token' } });
       return;
     }
 
     if (response.status === 200 || response.status === 204) {
       navigate('/credentials');
-      return;
     }
   };
 
   return (
-    <div>
+    <div className="vault-page">
       <div className="page-banner">
         <h2>View Credential</h2>
       </div>
@@ -81,11 +83,7 @@ export default function CredentialEntryPage({ token, onLogout }) {
             <div className="card-header">
               <h3>Credential Details</h3>
               <div className="card-actions">
-                <button
-                  className="btn"
-                  type="button"
-                  onClick={() => navigate(`/credentials/${id}/edit`)}
-                >
+                <button className="btn" type="button" onClick={() => navigate(`/credentials/${id}/edit`)}>
                   Edit
                 </button>
                 <button className="btn" type="button" onClick={handleDelete}>
@@ -97,23 +95,19 @@ export default function CredentialEntryPage({ token, onLogout }) {
             <div>
               <label className="field">
                 <span>Site</span>
-                <input value={site} readOnly />
+                <input value={site} readOnly disabled tabIndex={-1} />
               </label>
 
               <label className="field">
                 <span>Username</span>
-                <input value={username} readOnly />
+                <input value={username} readOnly disabled tabIndex={-1} />
               </label>
 
               <label className="field">
                 <span>Password</span>
                 <div className="password-row">
-                  <input value={password} type={showPassword ? 'text' : 'password'} readOnly />
-                  <button
-                    className="btn"
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
+                  <input value={password} type={showPassword ? 'text' : 'password'} readOnly disabled tabIndex={-1} />
+                  <button className="btn" type="button" onClick={() => setShowPassword(!showPassword)}>
                     {showPassword ? 'Hide' : 'Show'}
                   </button>
                 </div>
@@ -121,7 +115,9 @@ export default function CredentialEntryPage({ token, onLogout }) {
 
               <label className="field">
                 <span>Notes</span>
-                <div className="notes-block">{notes}</div>
+                <div className={`notes-block ${notes?.trim() ? '' : 'notes-empty'}`}>
+                  {notes?.trim() ? notes : 'No notes are present.'}
+                </div>
               </label>
             </div>
           </div>
