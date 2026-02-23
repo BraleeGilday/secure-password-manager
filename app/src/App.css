@@ -4,6 +4,8 @@
     --magenta:       rgba(170, 0, 186);   /* #AA00BA */
     --magenta_light: rgba(170, 0, 170);   /* #AA00AA */
     --purple:        rgba(93, 13, 173);
+    --grey:          rgba(248, 249, 251); /* #f8f9fb */
+    --blue:          rgba(11, 87, 208);   /* Styled links with this blue */
 }
 
 /* --- BODY --- */
@@ -57,6 +59,8 @@ nav a, nav button {
 
 /* --- MAIN --- */
 main {
+  min-height: 80vh;
+  display: block; 
 }
 
 .page-center {
@@ -168,7 +172,7 @@ footer {
 
 .form-container {
   border-radius: 8px;
-  background-color: #f8f9fb;
+  background-color: var(--grey);
   padding: 32px;
   padding-bottom: 10px;
   max-width: 500px;
@@ -306,7 +310,7 @@ button[type="submit"]:hover {
   border: none;
   border-top: 2px solid #ddd;
   background: transparent;
-  color: #0b57d0;
+  color: var(--blue);
   cursor: pointer;
   font-size: 0.95rem;
 }
