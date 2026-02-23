@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -28,7 +28,6 @@ import './App.css'
 function RequireAuth({ isLoggedIn, children }) {
   return isLoggedIn ? children : <Navigate to="/login" replace />;
 }
-
 
 // Placeholder for credentials until real pages exist
 // Delete Me once Credentials exists!!

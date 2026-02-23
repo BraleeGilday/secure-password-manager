@@ -1,17 +1,15 @@
-import {Link} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Searchbar from './Searchbar';
 
 export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
-    // will need to be updated
-    const handleLogin = () => {
-        setIsLoggedIn(true);
-        // redirect to credentials
-    }
+    const navigate = useNavigate();
 
     const handleLogout = () => {
-        // localStorage.removeItem('token');
+        localStorage.removeItem('access_token');
         setIsLoggedIn(false);
-    }
+        navigate("/login", { replace: true });
+    };
+    
     return(
         <>
         <header>
@@ -25,22 +23,19 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                     <Searchbar />
                     <nav>
                         <div>
-                            {/* TODO: UPDATE to 
-                            <LINK>profile</LINK>
-                            <Link>logout</Link> */}
-                            <a>profile</a>
-                            <a onClick={handleLogout}>logout</a>
+                            <Link to="/profile">profile</Link>
+                            <button type="button" onClick={handleLogout}>
+                                logout
+                            </button>
                         </div>
                     </nav>
                     </>
                 ) : (
                     <>
-                    {/* <Link>register</Link>
-                    <Link>login</Link> */}
                     <nav>
                         <div>
-                            <a>register</a>
-                            <a onClick={handleLogin}>login</a>
+                            <Link to="/register">register</Link>
+                            <Link to="/login">login</Link>
                         </div>
                     </nav>
                     

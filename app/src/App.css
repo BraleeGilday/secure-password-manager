@@ -22,7 +22,7 @@ header { padding: 1%; }
     font-weight: 700;
 }
 
-nav a {
+nav a, nav button {
     color: black;
     cursor: pointer;
     text-decoration: none;
@@ -30,6 +30,8 @@ nav a {
     padding: 3px 12px;
     border: 1.5px solid;
     font-weight: 700;
+    border-radius: 0;
+    background-color: white;
 }
 
 /* --- SEARCHBAR --- */
@@ -55,11 +57,14 @@ nav a {
 
 /* --- MAIN --- */
 main {
-    height: 80vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+}
+
+.page-center {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* --- CARD --- */
@@ -184,10 +189,10 @@ label {
 }
 
 /* Text inputs */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-select {
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="password"],
+.form-container select {
   width: 100%;
   padding: 12px;
   margin: 8px 0;
