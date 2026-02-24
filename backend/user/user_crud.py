@@ -60,8 +60,6 @@ def update_user_password(db: Session, update_password: UserPasswordUpdate, curre
     return user
 
 """
-OLD ONE HERE
-
 def delete_user(db: Session, current_user: User) -> None:
     
     remove user
@@ -75,10 +73,9 @@ def delete_user(db: Session, current_user: User) -> None:
     db.commit()
 """
 
-# NEW ONE: DELETES ALL CREDENTIALS BEFORE DELETING USER (tried delete cascade on models but SQLite didnt like it, may need other changes if using cascade. tbd)
 def delete_user(db: Session, current_user: User) -> None:
     """
-    Delete user and ALL their credentials first,
+    Delete a user and ALL their credentials first,
     uses bulk deletes to avoid setting credential.user_id = NULL.
     """
 
