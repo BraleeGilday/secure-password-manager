@@ -28,5 +28,3 @@ EOF
 
 echo "job's done!"
 echo "you can now view SPM"
-
-# echo "run 'docker compose -f docker-compose.prod.yml' up to start server"
