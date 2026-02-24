@@ -1,30 +1,25 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-import api from '../api/client';
+import { deleteCredential, fetchCredentialById } from "../api/credentials";
 
-export default function CredentialEntryPage({ token, onLogout }) {
+export default function CredentialEntryPage({ onLogout }) {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [site, setSite] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [notes, setNotes] = useState('');
+  const [site, setSite] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [notes, setNotes] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     async function fetchCredential() {
-      const response = await api.get(`/spm/credentials/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        validateStatus: () => true,
-      });
+      const response = await fetchCredentialById(id);
 
       if (response.status === 401) {
-        onLogout();
-        navigate('/', { state: { message: 'Session expired, paste new token' } });
+        onLogout?.();
+        navigate("/login", { replace: true });
         return;
       }
 
@@ -33,34 +28,31 @@ export default function CredentialEntryPage({ token, onLogout }) {
       }
 
       const data = response.data;
-      setSite((data && data.site) || '');
-      setUsername((data && data.username) || '');
-      setPassword((data && data.password) || '');
-      setNotes((data && data.notes) || '');
+      setSite((data && data.site) || "");
+      setUsername((data && data.username) || "");
+      setPassword((data && data.password) || "");
+      setNotes((data && data.notes) || "");
     }
 
     fetchCredential();
-  }, [id, token, navigate, onLogout]);
+  }, [id, navigate, onLogout]);
 
   const handleDelete = async () => {
-    const ok = window.confirm(`Delete credential "${site}" (${username})? This cannot be undone.`);
+    const ok = window.confirm(
+      `Delete credential "${site}" (${username})? This cannot be undone.`
+    );
     if (!ok) return;
-    
-    const response = await api.delete(`/spm/credentials/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      validateStatus: () => true,
-    });
+
+    const response = await deleteCredential(id);
 
     if (response.status === 401) {
-      onLogout();
-      navigate('/', { state: { message: 'Session expired, paste new token' } });
+      onLogout?.();
+      navigate("/login", { replace: true });
       return;
     }
 
     if (response.status === 200 || response.status === 204) {
-      navigate('/credentials');
+      navigate("/credentials");
     }
   };
 
@@ -81,12 +73,20 @@ export default function CredentialEntryPage({ token, onLogout }) {
         <section className="vault-content">
           <div className="card">
             <div className="card-header">
-              <h3>Credential Details</h3>
+              <h3>Review Current Details</h3>
               <div className="card-actions">
-                <button className="btn" type="button" onClick={() => navigate(`/credentials/${id}/edit`)}>
+                <button
+                  className="btn"
+                  type="button"
+                  onClick={() => navigate(`/credentials/${id}/edit`)}
+                >
                   Edit
                 </button>
-                <button className="btn" type="button" onClick={handleDelete}>
+                <button
+                  className="btn btn-delete"
+                  type="button"
+                  onClick={handleDelete}
+                >
                   Delete
                 </button>
               </div>
@@ -106,17 +106,29 @@ export default function CredentialEntryPage({ token, onLogout }) {
               <label className="field">
                 <span>Password</span>
                 <div className="password-row">
-                  <input value={password} type={showPassword ? 'text' : 'password'} readOnly disabled tabIndex={-1} />
-                  <button className="btn" type="button" onClick={() => setShowPassword(!showPassword)}>
-                    {showPassword ? 'Hide' : 'Show'}
+                  <input
+                    value={password}
+                    type={showPassword ? "text" : "password"}
+                    readOnly
+                    disabled
+                    tabIndex={-1}
+                  />
+                  <button
+                    className="btn"
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
                   </button>
                 </div>
               </label>
 
               <label className="field">
                 <span>Notes</span>
-                <div className={`notes-block ${notes?.trim() ? '' : 'notes-empty'}`}>
-                  {notes?.trim() ? notes : 'No notes are present.'}
+                <div
+                  className={`notes-block ${notes?.trim() ? "" : "notes-empty"}`}
+                >
+                  {notes?.trim() ? notes : "No notes are present."}
                 </div>
               </label>
             </div>

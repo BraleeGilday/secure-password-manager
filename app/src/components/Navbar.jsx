@@ -1,55 +1,52 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import Searchbar from './Searchbar';
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Searchbar from "./Searchbar";
 
 export default function Navbar({ isLoggedIn, onLogout }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const showSearch = isLoggedIn && location.pathname === '/credentials';
-
-  const handleLogin = () => {
-    // Token paste login on welcome page (TEMP)
-    navigate('/');
-  };
+  const showSearch = isLoggedIn && location.pathname === "/credentials";
 
   const handleLogout = () => {
     onLogout?.();
-    navigate('/');
+    navigate("/login", { replace: true });
   };
 
   return (
-    <>
-      <header>
-        <div className="navbar">
-          <div>
-            <h1 style={{ cursor: 'pointer' }} onClick={() => navigate(isLoggedIn ? '/credentials' : '/')}
+    <header>
+      <div className="navbar">
+        <div>
+          <h1 style={{ margin: 0 }}>
+            <Link
+              to={isLoggedIn ? "/credentials" : "/"}
+              style={{ textDecoration: "none", color: "inherit" }}
             >
               SPM
-            </h1>
-          </div>
-
-          {isLoggedIn ? (
-            <>
-              {showSearch ? <Searchbar /> : null}
-              <nav>
-                <div>
-                  <a>Profile</a>
-                  <a onClick={handleLogout}>Logout</a>
-                </div>
-              </nav>
-            </>
-          ) : (
-            <>
-              <nav>
-                <div>
-                  <a>register</a>
-                  <a onClick={handleLogin}>Login</a>
-                </div>
-              </nav>
-            </>
-          )}
+            </Link>
+          </h1>
         </div>
-      </header>
-    </>
+
+        {isLoggedIn ? (
+          <>
+            {showSearch ? <Searchbar /> : null}
+            <nav>
+              <div>
+                <Link to="/profile">Profile</Link>
+                <button type="button" onClick={handleLogout}>
+                  Logout
+                </button>
+              </div>
+            </nav>
+          </>
+        ) : (
+          <nav>
+            <div>
+              <Link to="/register">register</Link>
+              <Link to="/login">login</Link>
+            </div>
+          </nav>
+        )}
+      </div>
+    </header>
   );
 }

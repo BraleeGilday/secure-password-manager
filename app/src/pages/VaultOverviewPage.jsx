@@ -1,30 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useCallback, useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
-import api from '../api/client';
-import CredentialRow from '../components/CredentialRow';
+import { listCredentials } from "../api/credentials";
+import CredentialRow from "../components/CredentialRow";
 
-export default function VaultOverviewPage({ token, onLogout }) {
+export default function VaultOverviewPage({ onLogout }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const [credentials, setCredentials] = useState([]);
-  const searchTerm = (searchParams.get('search') || '').trim();
+  const searchTerm = (searchParams.get("search") || "").trim();
 
   const fetchCredentialsSearch = useCallback(
     async (term) => {
-      const query = term ? `?search=${encodeURIComponent(term)}` : '';
-
-      const response = await api.get(`/spm/credentials/${query}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        validateStatus: () => true,
-      });
+      const response = await listCredentials(term);
 
       if (response.status === 401) {
-        onLogout();
-        navigate('/', { state: { message: 'Session expired, paste new token' } });
+        onLogout?.();
+        navigate("/login", { replace: true });
         return;
       }
 
@@ -35,7 +28,7 @@ export default function VaultOverviewPage({ token, onLogout }) {
 
       setCredentials(Array.isArray(response.data) ? response.data : []);
     },
-    [token, onLogout, navigate]
+    [onLogout, navigate]
   );
 
   useEffect(() => {
@@ -74,7 +67,9 @@ export default function VaultOverviewPage({ token, onLogout }) {
             {credentials.length === 0 ? (
               <p>No credentials found.</p>
             ) : (
-              credentials.map((c) => <CredentialRow key={c.id} id={c.id} site={c.site} />)
+              credentials.map((c) => (
+                <CredentialRow key={c.id} id={c.id} site={c.site} />
+              ))
             )}
           </div>
         </section>

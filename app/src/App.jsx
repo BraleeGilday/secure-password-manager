@@ -1,101 +1,150 @@
-import { useState } from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import { useEffect, useState } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
-import Welcome from './pages/Welcome';
-import VaultOverviewPage from './pages/VaultOverviewPage';
-import CredentialEntryPage from './pages/CredentialEntryPage';
-import CredentialCreatePage from './pages/CredentialCreatePage';
-import CredentialEditPage from './pages/CredentialEditPage';
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
-import './App.css';
+import Welcome from "./pages/Welcome";
+import LoginPage from "./pages/LoginPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
 
-const TOKEN_KEY = 'token';
+import UserProfilePage from "./pages/UserProfilePage.jsx";
+import EditEmailPage from "./pages/EditEmailPage.jsx";
+import EditDisplayNamePage from "./pages/EditDisplayNamePage.jsx";
+import ChangePasswordPage from "./pages/ChangePasswordPage.jsx";
+import DeleteAccountPage from "./pages/DeleteAccountPage.jsx";
 
-function getSavedToken() {
-  return localStorage.getItem(TOKEN_KEY) || '';
-}
+import VaultOverviewPage from "./pages/VaultOverviewPage.jsx";
+import CredentialEntryPage from "./pages/CredentialEntryPage.jsx";
+import CredentialCreatePage from "./pages/CredentialCreatePage.jsx";
+import CredentialEditPage from "./pages/CredentialEditPage.jsx";
 
-function RequireAuth({ token, children }) {
-  const location = useLocation();
+import "./App.css";
 
-  if (!token) {
-    return (
-      <Navigate
-        to="/"
-        replace
-        state={{
-          message: 'Paste access token from backend docs',
-          from: location.pathname,
-        }}
-      />
-    );
-  }
-
-  return children;
+/**
+ * RequireAuth acts as a route guard for protected pages.
+ *
+ * If the user is logged in, it renders the requested page (children).
+ * If not, it redirects the user to the login page instead.
+ *
+ * This prevents unauthenticated users from accessing protected routes
+ * like /profile or /credentials directly via the URL.
+ */
+function RequireAuth({ isLoggedIn, children }) {
+  return isLoggedIn ? children : <Navigate to="/login" replace />;
 }
 
 function App() {
-  const [token, setToken] = useState(getSavedToken());
+  const location = useLocation();
 
-  const saveToken = (newToken) => {
-    localStorage.setItem(TOKEN_KEY, newToken);
-    setToken(newToken);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem("access_token")
+  );
+
+  // Keep React state in sync with localStorage on navigation
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem("access_token"));
+  }, [location.pathname]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    setIsLoggedIn(false);
   };
-
-  const logout = () => {
-    localStorage.removeItem(TOKEN_KEY);
-    setToken('');
-  };
-
-  const isLoggedIn = Boolean(token);
 
   return (
     <>
-    <Navbar isLoggedIn={isLoggedIn} onLogout={logout} />
-    <main>
-        {/* Routers */}
+      <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+      <main>
         <Routes>
-          <Route path="/" element={<Welcome token={token} onSaveToken={saveToken} />} />
+          <Route path="/" element={<Welcome />} />
 
+          {/* Auth */}
+          <Route
+            path="/login"
+            element={<LoginPage setIsLoggedIn={setIsLoggedIn} />}
+          />
+          <Route path="/register" element={<RegisterPage />} />
+
+          {/* User Pages */}
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth isLoggedIn={isLoggedIn}>
+                <UserProfilePage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile/email"
+            element={
+              <RequireAuth isLoggedIn={isLoggedIn}>
+                <EditEmailPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile/name"
+            element={
+              <RequireAuth isLoggedIn={isLoggedIn}>
+                <EditDisplayNamePage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile/password"
+            element={
+              <RequireAuth isLoggedIn={isLoggedIn}>
+                <ChangePasswordPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile/delete"
+            element={
+              <RequireAuth isLoggedIn={isLoggedIn}>
+                <DeleteAccountPage />
+              </RequireAuth>
+            }
+          />
+
+          {/* Credential Pages */}
           <Route
             path="/credentials"
             element={
-              <RequireAuth token={token}>
-                <VaultOverviewPage token={token} onLogout={logout} />
+              <RequireAuth isLoggedIn={isLoggedIn}>
+                <VaultOverviewPage onLogout={handleLogout} />
               </RequireAuth>
             }
           />
           <Route
             path="/credentials/new"
             element={
-              <RequireAuth token={token}>
-                <CredentialCreatePage token={token} onLogout={logout} />
+              <RequireAuth isLoggedIn={isLoggedIn}>
+                <CredentialCreatePage onLogout={handleLogout} />
               </RequireAuth>
             }
           />
           <Route
             path="/credentials/:id"
             element={
-              <RequireAuth token={token}>
-                <CredentialEntryPage token={token} onLogout={logout} />
+              <RequireAuth isLoggedIn={isLoggedIn}>
+                <CredentialEntryPage onLogout={handleLogout} />
               </RequireAuth>
             }
           />
           <Route
             path="/credentials/:id/edit"
             element={
-              <RequireAuth token={token}>
-                <CredentialEditPage token={token} onLogout={logout} />
+              <RequireAuth isLoggedIn={isLoggedIn}>
+                <CredentialEditPage onLogout={handleLogout} />
               </RequireAuth>
             }
           />
         </Routes>
-    </main>
-    <Footer />
+      </main>
+      <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

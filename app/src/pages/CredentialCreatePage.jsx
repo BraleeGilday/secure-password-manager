@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-import api from '../api/client';
+import { createCredential } from "../api/credentials";
 
-import PasswordGeneratorButton from './pwd_gen/PasswordGeneratorButton';
+import PasswordGeneratorButton from "./pwd_gen/PasswordGeneratorButton";
 
-export default function CredentialCreatePage({ token, onLogout }) {
+export default function CredentialCreatePage({ onLogout }) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    site: '',
-    username: '',
-    password: '',
-    notes: '',
+    site: "",
+    username: "",
+    password: "",
+    notes: "",
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -25,34 +25,35 @@ export default function CredentialCreatePage({ token, onLogout }) {
     e.preventDefault();
 
     // Required fields check (site, username, password)
-    if (!formData.site.trim() || !formData.username.trim() || !formData.password.trim()) {
-    window.alert('Please enter a Site, Username, and Password to create a credential.');
-    return;
+    if (
+      !formData.site.trim() ||
+      !formData.username.trim() ||
+      !formData.password.trim()
+    ) {
+      window.alert(
+        "Please enter a Site, Username, and Password to create a credential."
+      );
+      return;
     }
 
-    const response = await api.post('/spm/credentials/', formData, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      validateStatus: () => true,
-    });
+    const response = await createCredential(formData);
 
     if (response.status === 401) {
-      onLogout();
-      navigate('/', { state: { message: 'Session expired, paste new token' } });
+      onLogout?.();
+      navigate("/login", { replace: true });
       return;
     }
 
     // Duplicate site and username combination check
     if (response.status === 409) {
-      const msg ='A credential for this site and username combination already exists, use a different site or username.';
+      const msg =
+        "A credential for this site and username combination already exists, use a different site or username.";
       window.alert(msg);
       return;
     }
 
     if (response.status === 200 || response.status === 201) {
-      navigate('/credentials');
+      navigate("/credentials");
     }
   }
 
@@ -72,19 +73,23 @@ export default function CredentialCreatePage({ token, onLogout }) {
 
         <section className="vault-content">
           <div className="card">
-            <h3 style={{ marginTop: 0 }}>Add Credential</h3>
+            <h3 style={{ marginTop: 0 }}>Add to Required Fields of Site, Username, and Password</h3>
 
             <form onSubmit={handleSubmit}>
               <label className="field">
                 <span>Site</span>
-                <input value={formData.site} onChange={updateField('site')} placeholder="e.g., Google" />
+                <input
+                  value={formData.site}
+                  onChange={updateField("site")}
+                  placeholder="e.g., Google"
+                />
               </label>
 
               <label className="field">
                 <span>Username</span>
                 <input
                   value={formData.username}
-                  onChange={updateField('username')}
+                  onChange={updateField("username")}
                   placeholder="e.g., user@example.com"
                 />
               </label>
@@ -94,12 +99,16 @@ export default function CredentialCreatePage({ token, onLogout }) {
                 <div className="password-row">
                   <input
                     value={formData.password}
-                    onChange={updateField('password')}
-                    type={showPassword ? 'text' : 'password'}
+                    onChange={updateField("password")}
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter a password..."
                   />
-                  <button className="btn" type="button" onClick={() => setShowPassword(!showPassword)}>
-                    {showPassword ? 'Hide' : 'Show'}
+                  <button
+                    className="btn"
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
                   </button>
                 </div>
 
@@ -114,7 +123,7 @@ export default function CredentialCreatePage({ token, onLogout }) {
                 <textarea
                   className="notes-textarea"
                   value={formData.notes}
-                  onChange={updateField('notes')}
+                  onChange={updateField("notes")}
                   rows={5}
                   placeholder="Optional notes..."
                 />
