@@ -9,11 +9,10 @@ export default function Welcome() {
     let welcomeText = "Welcome to Secure Password Manager (SPM)! New users: click 'register' to get started."
 
     return(
-        <>
-        <Card content={welcomeText} />
-        
-        <PasswordGeneratorButton />
-        
-        </>
+        <div className="page-center">
+            <Card content={welcomeText} />
+            
+            <PasswordGeneratorButton />
+        </div>
     )
 }
