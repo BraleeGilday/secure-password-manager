@@ -2,7 +2,7 @@ import uuid
 from pwdlib import PasswordHash
 from sqlalchemy.orm import Session
 
-from models import User
+from models import User, Credential
 from user.user_schema import UserCreate, UserProfileUpdate, UserPasswordUpdate
 
 password_hash = PasswordHash.recommended()  # may be replaced
@@ -52,24 +52,43 @@ def update_user_password(db: Session, update_password: UserPasswordUpdate, curre
     # Verify current password matches stored hash
     if not password_hash.verify(update_password.current_password, user.password):
         raise ValueError("Incorrect password")
-    
+
     user.password = password_hash.hash(update_password.new_password)
 
     db.commit()
     db.refresh(user)
     return user
 
-
-
+"""
 def delete_user(db: Session, current_user: User) -> None:
-    """
+    
     remove user
 
     **TO-DO: UPDATE**
     When a user is deleted, their associated credentials also need to get deleted.
     (In credential, FK- user.id, on delete CASCADE)
-    """
+    
+    
     db.delete(current_user)
+    db.commit()
+"""
+
+def delete_user(db: Session, current_user: User) -> None:
+    """
+    Delete a user and ALL their credentials first,
+    uses bulk deletes to avoid setting credential.user_id = NULL.
+    """
+
+    # 1) Delete credentials owned by the user
+    db.query(Credential).filter(Credential.user_id == current_user.id).delete(
+        synchronize_session=False
+    )
+
+    # 2) Delete the user
+    db.query(User).filter(User.id == current_user.id).delete(
+        synchronize_session=False
+    )
+
     db.commit()
 
 
