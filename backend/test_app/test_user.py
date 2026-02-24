@@ -87,16 +87,14 @@ def test_read_user_success(client, registered_user, user_token):
 
 
 # Test UPDATE
-def test_update_user_success(client, registered_user, user_token):
+def test_update_user_profile_success(client, registered_user, user_token):
     updated_email = "updated@example.com"
-    updated_password = "Newpass123%"
     updated_display_name = "Updated User"
 
     response = client.put(
         f"/spm/user/{registered_user['id']}",
         json={
             "email": updated_email,
-            "password": updated_password,
             "display_name": updated_display_name,
         },
         headers={"Authorization": f"Bearer {user_token}"},
@@ -106,6 +104,36 @@ def test_update_user_success(client, registered_user, user_token):
     body = response.json()
     assert body["email"] == updated_email
     assert body["display_name"] == updated_display_name
+
+
+def test_update_user_password_success(client, registered_user, user_token):
+    current_password = registered_user["password"]
+    updated_password = "Newpass123%"
+
+    response = client.put(
+        f"/spm/user/{registered_user['id']}/password",
+        json={
+            "current_password": current_password,
+            "new_password": updated_password,
+        },
+        headers={"Authorization": f"Bearer {user_token}"},
+    )
+    assert response.status_code == 204, response.text
+
+    # old password should no longer work
+    old_login = client.post(
+        "/spm/user/login",
+        data={"username": registered_user["email"], "password": current_password},
+    )
+    assert old_login.status_code == 401, old_login.text
+
+    # new password should work
+    new_login = client.post(
+        "/spm/user/login",
+        data={"username": registered_user["email"], "password": updated_password},
+    )
+    assert new_login.status_code == 200, new_login.text
+    assert "access_token" in new_login.json()
 
 
 # Test DELETE
