@@ -322,3 +322,244 @@ button[type="submit"]:hover {
 .profile-card:hover {
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
+
+/* ------------------------------------------------- Credential/Vault CSS (scoped to credentials only) -------------------------------------------------- */
+
+/* --- Page wrapper --- */
+.vault-page {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+  align-self: stretch;
+  height: 100%;
+  overflow: auto; /* allow scrolling within vault pages */
+}
+
+/* --- Banner --- */
+.vault-page .page-banner {
+  text-align: center;
+  margin: 16px 0 24px;
+}
+
+.vault-page .page-banner h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+/* --- Cards --- */
+.vault-page .card {
+  margin: 0;
+  max-width: none;
+  width: 100%;
+  padding: 18px 16px;
+  box-sizing: border-box;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.vault-page .card h3 {
+  margin-top: 0;
+}
+
+/* --- Center column layout --- */
+.vault-page .vault-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(0, 720px) minmax(240px, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.vault-page .vault-layout > aside {
+  grid-column: 1;
+  justify-self: end;
+  width: min(240px, 100%);
+}
+
+.vault-page .vault-layout > section {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.vault-page .vault-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* --- Buttons/links --- */
+.vault-page .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--magenta_light);
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 700;
+  transition: background-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.vault-page .btn:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+.vault-page .btn:active {
+  transform: translateY(0px);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.vault-page .btn:focus-visible {
+  outline: 3px solid rgba(11, 87, 208, 0.35);
+  outline-offset: 2px;
+}
+
+/* Nav buttons to fill nav card */
+.vault-page .vault-layout > aside .btn {
+  width: 100%;
+}
+
+/* Delete button: orange on hover */
+.vault-page .btn.btn-delete:hover {
+  background-color: #ff4d4d;
+  color: #000;
+}
+
+/* --- Credential list --- */
+.vault-page .cred-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vault-page .cred-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  text-decoration: none;
+  color: inherit;
+  box-sizing: border-box;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.vault-page .cred-row:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border-color: var(--blue);
+}
+
+.vault-page .cred-row:focus-visible {
+  outline: 3px solid rgba(11, 87, 208, 0.35);
+  outline-offset: 2px;
+}
+
+.vault-page .cred-row span[aria-hidden="true"] {
+  color: var(--blue);
+  font-weight: 800;
+}
+
+/* --- Form fields --- */
+.vault-page .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.vault-page input:not([type="checkbox"]):not([type="range"]),
+.vault-page textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+/* Blue hover highlight */
+.vault-page input:not([type="checkbox"]):not([type="range"]):hover:not(:disabled),
+.vault-page textarea:hover:not(:disabled) {
+  border-color: var(--blue);
+}
+
+.vault-page input:not([type="checkbox"]):not([type="range"]):focus,
+.vault-page textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px rgba(11, 87, 208, 0.25);
+}
+
+/* View fields: greyed out, no highlight */
+.vault-page input:not([type="checkbox"]):not([type="range"]):disabled,
+.vault-page textarea:disabled {
+  background: #f2f2f2;
+  border-color: #ddd;
+  color: #333;
+}
+
+.vault-page .password-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.vault-page .pwd-gen-inline {
+  margin-top: 10px;
+}
+
+/* --- Entry card header --- */
+.vault-page .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.vault-page .card-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* View notes block */
+.vault-page .notes-block {
+  width: 100%;
+  min-height: 70px;
+  max-height: 160px;
+  overflow-y: auto;        /* scroll when too long */
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background: #f2f2f2; /* greyed out like other fields in view */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Empty notes block placeholder */
+.vault-page .notes-block.notes-empty {
+  color: #777;
+  font-style: italic;
+}
+
+/* Create/Edit notes block */
+.vault-page .notes-textarea {
+  width: 100%;
+  min-height: 140px;
+  max-height: 240px;    /* limit drag */
+  resize: vertical;     /* prevent sideways drag */
+  overflow-y: auto;     /* scroll when too long */
+}

@@ -16,8 +16,8 @@ export default function PasswordGeneratorButton() {
 
     return (
         <>
-        <button className="pwd-gen-btn" onClick={openPwdGenModal}>
-        generator
+        <button type="button" className="pwd-gen-btn" onClick={openPwdGenModal}>
+        Generator
         </button>
         {activeModal && (
             <Modal 
