@@ -2,8 +2,8 @@ import uuid
 from pwdlib import PasswordHash
 from sqlalchemy.orm import Session
 
-from models import User
-from user.user_schema import UserCreate, UserUpdate
+from models import User, Credential
+from user.user_schema import UserCreate, UserProfileUpdate, UserPasswordUpdate
 
 password_hash = PasswordHash.recommended()  # may be replaced
 
@@ -29,30 +29,69 @@ def create_user(db: Session, create_user: UserCreate) -> User:
     return new_user
 
 
-def update_user(db: Session, update_user: UserUpdate, current_user: User) -> User:
+def update_user_profile(db: Session, update_profile: UserProfileUpdate, current_user: User) -> User:
     """
-    update user (email, password, and display name)
+    update user (email and display name)
     """
     user = get_user_by_id(db, current_user.id)
 
-    user.email = update_user.email
-    user.password = password_hash.hash(update_user.password)
-    user.display_name = update_user.display_name
+    user.email = update_profile.email
+    user.display_name = update_profile.display_name
 
     db.commit()
     db.refresh(user)
     return user
 
 
-def delete_user(db: Session, current_user: User) -> None:
+def update_user_password(db: Session, update_password: UserPasswordUpdate, current_user: User) -> User:
     """
+    update user password (only)
+    """
+    user = get_user_by_id(db, current_user.id)
+
+    # Verify current password matches stored hash
+    if not password_hash.verify(update_password.current_password, user.password):
+        raise ValueError("Incorrect password")
+
+    user.password = password_hash.hash(update_password.new_password)
+
+    db.commit()
+    db.refresh(user)
+    return user
+
+"""
+OLD ONE HERE
+
+def delete_user(db: Session, current_user: User) -> None:
+    
     remove user
 
     **TO-DO: UPDATE**
     When a user is deleted, their associated credentials also need to get deleted.
     (In credential, FK- user.id, on delete CASCADE)
-    """
+    
+    
     db.delete(current_user)
+    db.commit()
+"""
+
+# NEW ONE: DELETES ALL CREDENTIALS BEFORE DELETING USER (tried delete cascade on models but SQLite didnt like it, may need other changes if using cascade. tbd)
+def delete_user(db: Session, current_user: User) -> None:
+    """
+    Delete user and ALL their credentials first,
+    uses bulk deletes to avoid setting credential.user_id = NULL.
+    """
+
+    # 1) Delete credentials owned by the user
+    db.query(Credential).filter(Credential.user_id == current_user.id).delete(
+        synchronize_session=False
+    )
+
+    # 2) Delete the user
+    db.query(User).filter(User.id == current_user.id).delete(
+        synchronize_session=False
+    )
+
     db.commit()
 
 
