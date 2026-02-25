@@ -4,8 +4,6 @@ services:
     image: spm-backend:latest
     env_file:
       - .env.prod
-    environment:
-      - DATABASE_URL=postgresql://${RDS_USER}:${RDS_PASSWORD}@${RDS_HOST}:${RDS_PORT}/${POSTGRES_DB}
     restart: always
 
   frontend:
