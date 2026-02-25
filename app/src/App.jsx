@@ -34,31 +34,6 @@ function RequireAuth({ isLoggedIn, children }) {
   return isLoggedIn ? children : <Navigate to="/login" replace />;
 }
 
-/**
- * RequireAuth acts as a route guard for protected pages.
- *
- * If the user is logged in, it renders the requested page (children).
- * If not, it redirects the user to the login page instead.
- *
- * This prevents unauthenticated users from accessing protected routes
- * like /profile or /credentials directly via the URL.
- */
-function RequireAuth({ isLoggedIn, children }) {
-  return isLoggedIn ? children : <Navigate to="/login" replace />;
-}
-
-// Placeholder for credentials until real pages exist
-// Delete Me once Credentials exists!!
-function CredentialsPlaceholder() {
-  return (
-    <div style={{ padding: "1rem" }}>
-      <h2>Credentials</h2>
-      <p>Coming soon.</p>
-    </div>
-  );
-}
-
-
 function App() {
   const location = useLocation();
 
