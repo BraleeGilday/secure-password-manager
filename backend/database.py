@@ -3,8 +3,12 @@ from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+
 ENV = os.getenv("APP_ENV", "development")
+if ENV == "development":
+    load_dotenv(".env")
+else:
+    load_dotenv(".env.prod")
 
 if ENV == "development":
     USER = os.environ["POSTGRES_USER"]
