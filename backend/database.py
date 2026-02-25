@@ -5,15 +5,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-POSTGRES_USER = os.environ["POSTGRES_USER"]
-POSTGRES_DB = os.environ.get("POSTGRES_DB", POSTGRES_USER)
-POSTGRES_HOST = os.environ.get("POSTGRES_HOST", "localhost")
-POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "")
-POSTGRES_ENGINE = os.environ.get("POSTGRES_ENGINE", "postgresql+psycopg2")
+USER = os.environ["POSTGRES_USER"]
+PWD = os.environ.get("POSTGRES_PASSWORD", "default")
+DB = os.environ.get("POSTGRES_DB", "spm_db")
+HOST = os.environ.get("POSTGRES_HOST", "localhost")
+PORT = os.environ.get("POSTGRES_PORT", "5432")
+ENGINE = os.environ.get("POSTGRES_ENGINE", "postgresql+psycopg2")
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./spm.db"
 POSTGRES_DB_URL = (
-    f"{POSTGRES_ENGINE}://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:5432/spm_db"
+    f"{ENGINE}://{USER}:{PWD}@{HOST}:{PORT}/{DB}"
 )
 
 engine = create_engine(POSTGRES_DB_URL)
