@@ -1,8 +1,11 @@
 /* index.css will need to be adjusted, it's overriding styles */
 /* --- ROOT --- */
 :root { 
-    --magenta:     rgba(170, 0, 186);
-    --purple:      rgba(93, 13, 173);
+    --magenta:       rgba(170, 0, 186);   /* #AA00BA */
+    --magenta_light: rgba(170, 0, 170);   /* #AA00AA */
+    --purple:        rgba(93, 13, 173);
+    --grey:          rgba(248, 249, 251); /* #f8f9fb */
+    --blue:          rgba(11, 87, 208);   /* Styled links with this blue */
 }
 
 /* --- BODY --- */
@@ -21,7 +24,7 @@ header { padding: 1%; }
     font-weight: 700;
 }
 
-nav a {
+nav a, nav button {
     color: black;
     cursor: pointer;
     text-decoration: none;
@@ -29,6 +32,8 @@ nav a {
     padding: 3px 12px;
     border: 1.5px solid;
     font-weight: 700;
+    border-radius: 0;
+    background-color: white;
 }
 
 /* --- SEARCHBAR --- */
@@ -54,11 +59,16 @@ nav a {
 
 /* --- MAIN --- */
 main {
-    height: 80vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  min-height: 80vh;
+  display: block; 
+}
+
+.page-center {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* --- CARD --- */
@@ -156,4 +166,400 @@ footer {
     height: 5rem;
     text-align:center;
     font-weight: 700;
+}
+
+/*Form styling adapted from https://www.w3schools.com/css/tryit.asp?filename=trycss_forms*/
+
+.form-container {
+  border-radius: 8px;
+  background-color: var(--grey);
+  padding: 32px;
+  padding-bottom: 10px;
+  max-width: 500px;
+  margin: 60px auto;  /* centers horizontally */
+  border: 1px solid #e3e6eb;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.form-title {
+  font-size: 2.5rem;
+  color: var(--magenta_light);
+  margin-top: 20px;
+  margin-bottom: 35px;
+}
+
+/* Labels stacked */
+label {
+  display: block;
+  margin-top: 8px;
+}
+
+/* Text inputs */
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="password"],
+.form-container select {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Submit button */
+button[type="submit"] {
+  width: 100%;
+  background-color: var(--magenta_light);
+  color: white;
+  padding: 14px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: var(--magenta);
+}
+
+.form-link {
+  display: block;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: underline;
+  width: fit-content;
+}
+
+.form-link:hover {
+  color: #004999;
+}
+
+/* End of styling from w3schools */
+
+/* Profile Cards */
+/* Page wrapper */
+.profile-wrapper {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+/* Title */
+.profile-title {
+  text-align: center;
+  margin-bottom: 28px;
+  font-size: 2rem;
+}
+
+/* Stack of cards */
+.profile-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Card container */
+.profile-card {
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+/* Main content row (icon + text) */
+.profile-card-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 16px;
+}
+
+/* Icon column */
+.profile-icon {
+  width: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Text area */
+.profile-card-text {
+  flex: 1;
+}
+
+.profile-card-heading {
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 6px;
+}
+
+.profile-card-value {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Bottom link bar */
+.profile-link {
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  border: none;
+  border-top: 2px solid #ddd;
+  background: transparent;
+  color: var(--blue);
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.profile-link:hover {
+  text-decoration: underline;
+}
+
+.profile-card:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ------------------------------------------------- Credential/Vault CSS (scoped to credentials only) -------------------------------------------------- */
+
+/* --- Page wrapper --- */
+.vault-page {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+  align-self: stretch;
+  height: 100%;
+  overflow: auto; /* allow scrolling within vault pages */
+}
+
+/* --- Banner --- */
+.vault-page .page-banner {
+  text-align: center;
+  margin: 16px 0 24px;
+}
+
+.vault-page .page-banner h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+/* --- Cards --- */
+.vault-page .card {
+  margin: 0;
+  max-width: none;
+  width: 100%;
+  padding: 18px 16px;
+  box-sizing: border-box;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.vault-page .card h3 {
+  margin-top: 0;
+}
+
+/* --- Center column layout --- */
+.vault-page .vault-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(0, 720px) minmax(240px, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.vault-page .vault-layout > aside {
+  grid-column: 1;
+  justify-self: end;
+  width: min(240px, 100%);
+}
+
+.vault-page .vault-layout > section {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.vault-page .vault-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* --- Buttons/links --- */
+.vault-page .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--magenta_light);
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 700;
+  transition: background-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.vault-page .btn:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+.vault-page .btn:active {
+  transform: translateY(0px);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.vault-page .btn:focus-visible {
+  outline: 3px solid rgba(11, 87, 208, 0.35);
+  outline-offset: 2px;
+}
+
+/* Nav buttons to fill nav card */
+.vault-page .vault-layout > aside .btn {
+  width: 100%;
+}
+
+/* Delete button: orange on hover */
+.vault-page .btn.btn-delete:hover {
+  background-color: #ff4d4d;
+  color: #000;
+}
+
+/* --- Credential list --- */
+.vault-page .cred-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vault-page .cred-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  text-decoration: none;
+  color: inherit;
+  box-sizing: border-box;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.vault-page .cred-row:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border-color: var(--blue);
+}
+
+.vault-page .cred-row:focus-visible {
+  outline: 3px solid rgba(11, 87, 208, 0.35);
+  outline-offset: 2px;
+}
+
+.vault-page .cred-row span[aria-hidden="true"] {
+  color: var(--blue);
+  font-weight: 800;
+}
+
+/* --- Form fields --- */
+.vault-page .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.vault-page input:not([type="checkbox"]):not([type="range"]),
+.vault-page textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+/* Blue hover highlight */
+.vault-page input:not([type="checkbox"]):not([type="range"]):hover:not(:disabled),
+.vault-page textarea:hover:not(:disabled) {
+  border-color: var(--blue);
+}
+
+.vault-page input:not([type="checkbox"]):not([type="range"]):focus,
+.vault-page textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px rgba(11, 87, 208, 0.25);
+}
+
+/* View fields: greyed out, no highlight */
+.vault-page input:not([type="checkbox"]):not([type="range"]):disabled,
+.vault-page textarea:disabled {
+  background: #f2f2f2;
+  border-color: #ddd;
+  color: #333;
+}
+
+.vault-page .password-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.vault-page .pwd-gen-inline {
+  margin-top: 10px;
+}
+
+/* --- Entry card header --- */
+.vault-page .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.vault-page .card-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* View notes block */
+.vault-page .notes-block {
+  width: 100%;
+  min-height: 70px;
+  max-height: 160px;
+  overflow-y: auto;        /* scroll when too long */
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background: #f2f2f2; /* greyed out like other fields in view */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Empty notes block placeholder */
+.vault-page .notes-block.notes-empty {
+  color: #777;
+  font-style: italic;
+}
+
+/* Create/Edit notes block */
+.vault-page .notes-textarea {
+  width: 100%;
+  min-height: 140px;
+  max-height: 240px;    /* limit drag */
+  resize: vertical;     /* prevent sideways drag */
+  overflow-y: auto;     /* scroll when too long */
 }

@@ -1,53 +1,52 @@
-import {Link} from 'react-router-dom';
-import Searchbar from './Searchbar';
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Searchbar from "./Searchbar";
 
-export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
-    // will need to be updated
-    const handleLogin = () => {
-        setIsLoggedIn(true);
-        // redirect to credentials
-    }
+export default function Navbar({ isLoggedIn, onLogout }) {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    const handleLogout = () => {
-        // localStorage.removeItem('token');
-        setIsLoggedIn(false);
-    }
-    return(
-        <>
-        <header>
-            <div className='navbar'>
+  const showSearch = isLoggedIn && location.pathname === "/credentials";
+
+  const handleLogout = () => {
+    onLogout?.();
+    navigate("/login", { replace: true });
+  };
+
+  return (
+    <header>
+      <div className="navbar">
+        <div>
+          <h1 style={{ margin: 0 }}>
+            <Link
+              to={isLoggedIn ? "/credentials" : "/"}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              SPM
+            </Link>
+          </h1>
+        </div>
+
+        {isLoggedIn ? (
+          <>
+            {showSearch ? <Searchbar /> : null}
+            <nav>
+              <div>
+                <Link to="/profile">Profile</Link>
+                <button type="button" onClick={handleLogout}>
+                  Logout
+                </button>
+              </div>
+            </nav>
+          </>
+        ) : (
+          <nav>
             <div>
-                <h1>SPM</h1>
+              <Link to="/register">register</Link>
+              <Link to="/login">login</Link>
             </div>
-                
-                {isLoggedIn ? (
-                    <>
-                    <Searchbar />
-                    <nav>
-                        <div>
-                            {/* TODO: UPDATE to 
-                            <LINK>profile</LINK>
-                            <Link>logout</Link> */}
-                            <a>profile</a>
-                            <a onClick={handleLogout}>logout</a>
-                        </div>
-                    </nav>
-                    </>
-                ) : (
-                    <>
-                    {/* <Link>register</Link>
-                    <Link>login</Link> */}
-                    <nav>
-                        <div>
-                            <a>register</a>
-                            <a onClick={handleLogin}>login</a>
-                        </div>
-                    </nav>
-                    
-                    </>
-                )}
-            </div>
-        </header>
-        </>
-    )
+          </nav>
+        )}
+      </div>
+    </header>
+  );
 }
