@@ -32,4 +32,5 @@ POSTGRES_ENGINE = "postgresql+psycopg2"
 - access the application at ```localhost:3000```
 - open new terminal
 - run ```docker compose exec backend alembic upgrade head``` to initialize the database
-- when finished run ```docker compose down``` to clean up the images
+- note the database will not persist across use in local dev once docker images are removed
+- when finished run ```docker compose down``` to clean up/remove the images
