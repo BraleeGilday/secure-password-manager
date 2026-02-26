@@ -1,41 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import os
-from dotenv import load_dotenv
+from config import get_settings
 
+settings = get_settings()
+POSTGRES_DB_URL = settings.create_database_url
+# SQLALCHEMY_DATABASE_URL = "sqlite:///./spm.db"
 
-ENV = os.getenv("APP_ENV", "development")
-if ENV == "development":
-    load_dotenv(".env")
-else:
-    load_dotenv(".env.prod")
-
-if ENV == "development":
-    USER = os.environ["POSTGRES_USER"]
-    PWD = os.environ.get("POSTGRES_PASSWORD", "default")
-    HOST = os.environ.get("POSTGRES_HOST", "localhost")
-    PORT = os.environ.get("POSTGRES_PORT", "5432")
-    DB = os.environ.get("POSTGRES_DB", "spm_db")
-    ENGINE = os.environ.get("POSTGRES_ENGINE", "postgresql+psycopg2")
-
-    connect_args = {}
-
-else:
-    USER = os.environ["RDS_USER"]
-    PWD = os.environ.get("RDS_PWD")
-    HOST = os.environ.get("RDS_HOST")
-    PORT = os.environ.get("RDS_PORT", "5432")
-    DB = os.environ.get("POSTGRES_DB")
-    ENGINE = os.environ.get("POSTGRES_ENGINE", "postgresql+psycopg2")
-
-    connect_args = {"sslmode": "require"}
-
-SQLALCHEMY_DATABASE_URL = "sqlite:///./spm.db"
-POSTGRES_DB_URL = (
-    f"{ENGINE}://{USER}:{PWD}@{HOST}:{PORT}/{DB}"
-)
-
-engine = create_engine(POSTGRES_DB_URL, connect_args=connect_args)
+engine = create_engine(POSTGRES_DB_URL, connect_args=settings.connect_args)
 
 LocalSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
