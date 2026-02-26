@@ -1,12 +1,14 @@
 from cryptography.fernet import Fernet, InvalidToken
-from starlette.config import Config
+from config import get_settings
+# from starlette.config import Config
 
 # Read environment variables / .env file
-config = Config(".env")
+# config = Config(".env")
 
-DEFAULT_TEST_CRED_ENC_KEY = "u36sOQjKvp93KNFIL4ACb3WJT-tV4Lp1qH8-XeWu0ko="  # valid Fernet key
-CRED_ENC_KEY = config("CRED_ENC_KEY", default=DEFAULT_TEST_CRED_ENC_KEY)
-
+# DEFAULT_TEST_CRED_ENC_KEY = "u36sOQjKvp93KNFIL4ACb3WJT-tV4Lp1qH8-XeWu0ko="  # valid Fernet key
+# CRED_ENC_KEY = config("CRED_ENC_KEY", default=DEFAULT_TEST_CRED_ENC_KEY)
+settings = get_settings()
+CRED_ENC_KEY = settings.CRED_ENC_KEY
 
 # Create Fernet instance with env key (convert to bytes)
 _fernet = Fernet(CRED_ENC_KEY.encode("utf-8"))
