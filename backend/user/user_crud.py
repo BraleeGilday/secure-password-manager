@@ -71,10 +71,7 @@ def delete_user(db: Session, current_user: User) -> None:
     )
 
     # Delete user
-    db.query(User).filter(User.id == current_user.id).delete(
-        synchronize_session=False
-    )
-
+    db.delete(current_user)
     db.commit()
 
 
