@@ -59,36 +59,19 @@ def update_user_password(db: Session, update_password: UserPasswordUpdate, curre
     db.refresh(user)
     return user
 
-"""
-def delete_user(db: Session, current_user: User) -> None:
-    
-    remove user
-
-    **TO-DO: UPDATE**
-    When a user is deleted, their associated credentials also need to get deleted.
-    (In credential, FK- user.id, on delete CASCADE)
-    
-    
-    db.delete(current_user)
-    db.commit()
-"""
 
 def delete_user(db: Session, current_user: User) -> None:
     """
-    Delete a user and ALL their credentials first,
-    uses bulk deletes to avoid setting credential.user_id = NULL.
+    delete user (after deleting all their credentials)
     """
 
-    # 1) Delete credentials owned by the user
+    # Delete all credentials owned by user
     db.query(Credential).filter(Credential.user_id == current_user.id).delete(
         synchronize_session=False
     )
 
-    # 2) Delete the user
-    db.query(User).filter(User.id == current_user.id).delete(
-        synchronize_session=False
-    )
-
+    # Delete user
+    db.delete(current_user)
     db.commit()
 
 

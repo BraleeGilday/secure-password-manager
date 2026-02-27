@@ -21,6 +21,7 @@ import CredentialEditPage from "./pages/CredentialEditPage.jsx";
 
 import "./App.css";
 
+
 /**
  * RequireAuth acts as a route guard for protected pages.
  *
@@ -33,6 +34,7 @@ import "./App.css";
 function RequireAuth({ isLoggedIn, children }) {
   return isLoggedIn ? children : <Navigate to="/login" replace />;
 }
+
 
 function App() {
   const location = useLocation();
