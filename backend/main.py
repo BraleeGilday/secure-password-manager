@@ -13,9 +13,11 @@ app = FastAPI()
 # need to add frontend address (localhost:<different port>)
 # will need to see how to redo for cloud deployment
 # (as simple as containerize + nginx?)
+# 8000 = backend ; 5173 dev ; 3000 prod
 origins = [
     "http://localhost:8000",
     "http://localhost:5173",
+    "http://localhost:3000"
 ]
 
 app.add_middleware(

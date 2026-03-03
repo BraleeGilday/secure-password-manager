@@ -1,5 +1,9 @@
-import { useState } from "react";
-import api from "../../api/client";
+import { useState } from 'react';
+import api from "../../api/client.js"
+
+// const DATABASE_URL = "http://127.0.0.1:8000"
+// for use with nginx
+const BACKEND_URL = "";
 
 // custom hook to handle copy, change, submit for password generator
 export const PasswordGeneratorHook = () => {

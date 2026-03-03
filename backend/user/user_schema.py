@@ -20,6 +20,7 @@ class UserProfileUpdate(BaseModel):
     email: EmailStr
     display_name: Optional[str] = None
 
+
 # Password UPDATE requires current password and new password
 class UserPasswordUpdate(BaseModel):
     current_password: str
@@ -30,6 +31,7 @@ class UserPasswordUpdate(BaseModel):
         if not v.strip():
             raise ValueError("Required field!")
         return v
+
 
 class UserResponse(BaseModel):
     id: str

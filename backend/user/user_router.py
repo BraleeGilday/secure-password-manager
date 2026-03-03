@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
 from starlette import status
-from starlette.config import Config
+# from starlette.config import Config
 from datetime import timedelta
 
 from database import get_db
@@ -33,13 +33,15 @@ from user.user_schema import (
     UserResponse,
     Token,
 )
-
+from config import get_settings
 from models import User
 
 router = APIRouter(prefix="/spm/user")
-config = Config(".env")
+# config = Config(".env")
 
-ACCESS_TOKEN_EXPIRE_MINUTES = int(config("TIMEOUT", default=1))
+settings = get_settings()
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.TIMEOUT
+# ACCESS_TOKEN_EXPIRE_MINUTES = int(config("TIMEOUT", default=1))
 MAX_LOGIN_ATTEMPTS = 4
 
 
