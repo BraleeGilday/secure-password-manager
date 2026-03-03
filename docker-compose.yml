@@ -1,0 +1,39 @@
+# based on Docker blog post: https://www.docker.com/blog/how-to-dockerize-react-app/
+
+services:
+  db:
+    image: postgres:15
+    container_name: spm_db
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    # volumes to persist data
+    # volumes:
+    #   - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/backend
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=db
+
+  frontend:
+    build:
+      context: ./app
+    ports:
+      - "3000:80"
+    # volumes for production code
+    #   - ./app:/app
+    #   - /app/node_modules
+    environment:
+      - APP_FASTAPI_URL=http://localhost:8000
+    depends_on:
+      - backend
+    

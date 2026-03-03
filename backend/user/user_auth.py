@@ -1,6 +1,6 @@
 import jwt
 from jwt.exceptions import PyJWTError
-from starlette.config import Config
+# from starlette.config import Config
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -8,13 +8,18 @@ from sqlalchemy.orm import Session
 
 from datetime import datetime, timedelta, timezone
 
+from config import get_settings
 from database import get_db
 from user.user_crud import get_user_by_email
 
-config = Config(".env")
+# config = Config(".env")
 
-SECRET_KEY = config("SECRET_KEY", default="dev-secret-key-change-me")
-ALGORITHM = "HS256"
+# SECRET_KEY = config("SECRET_KEY", default="dev-secret-key-change-me")
+# ALGORITHM = "HS256"
+
+settings = get_settings()
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
 
 router = APIRouter(prefix="/spm/user")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/spm/user/login")

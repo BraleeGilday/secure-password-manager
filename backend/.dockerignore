@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# Virtual environments
+venv/
+*.venv
+.venv/
+ENV/
+
+.vscode/
+.idea/
+
+
+.DS_Store
+
+# Log files, if any
+*.log
+
+# Configuration and secret files
+*.cfg
+*.conf
+*.ini
+!alembic.ini
+*.json
+*.yml
+*.yaml
+*.toml
+*.xml
+.secrets/
+.env
+
+# Databases
+*.sqlite
+
+# Distribution and build artifacts
+dist/
+build/
+
+*.pytest_cache/

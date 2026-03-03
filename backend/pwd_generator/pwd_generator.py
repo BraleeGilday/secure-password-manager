@@ -93,7 +93,7 @@ def create_password(
     """
 
     password = []
-    
+
     for _ in range(length):
         if total_symbols > 0:
             password.append(random.choice(symbols))
