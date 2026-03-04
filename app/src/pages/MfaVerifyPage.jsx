@@ -60,17 +60,18 @@ function MfaVerifyPage({ setIsLoggedIn }) {
   };
 
   return (
-    <div className="form-container">
-      <h1 className="form-title">Two-Factor Authentication</h1>
-      <p>
+    <div className="form-container mfa-card">
+      <h1 className="form-title mfa-title">Two-Factor Authentication</h1>
+      <p className="mfa-description mfa-description-tight">
         {email
-          ? `Enter the 6-digit code from your authenticator for ${email}.`
+          ? <>Enter the 6-digit code from your authenticator for <span className="mfa-email">{email}</span>.</>
           : "Enter your 6-digit code from your authenticator."}
       </p>
 
-      <form onSubmit={handleVerify}>
-        <label>6-digit code</label>
+      <form onSubmit={handleVerify} className="mfa-form">
+        <label className="mfa-label">6-digit code</label>
         <input
+          className="mfa-code-input"
           inputMode="numeric"
           value={code}
           onChange={(e) => setCode(e.target.value)}

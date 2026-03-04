@@ -9,7 +9,7 @@ function MfaSetupPage({ setIsLoggedIn }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [mfaToken, setMfaToken] = useState(
+  const [mfaToken] = useState(
     location.state?.mfaToken || sessionStorage.getItem("mfa_token") || ""
   );
 
@@ -62,11 +62,15 @@ function MfaSetupPage({ setIsLoggedIn }) {
     setLoadingConfirm(true);
 
     try {
-      const complete = await api.post("/spm/mfa/totp/complete", { mfa_token: mfaToken, code });
+      const complete = await api.post("/spm/mfa/totp/complete", {
+        mfa_token: mfaToken,
+        code,
+      });
 
       localStorage.setItem("access_token", complete.data.access_token);
       sessionStorage.removeItem("mfa_token");
       setIsLoggedIn?.(true);
+
       navigate("/credentials");
     } catch (err) {
       setError(err?.response?.data?.detail || "Invalid code. Try again.");
@@ -76,32 +80,36 @@ function MfaSetupPage({ setIsLoggedIn }) {
   };
 
   return (
-    <div className="form-container">
-      <h1 className="form-title">Set up Two-Factor Authentication</h1>
+    <div className="form-container mfa-card">
+      <h1 className="form-title mfa-title">Set up Two-Factor Authentication</h1>
 
-      <p>
-        Scan this QR code using an authenticator app (Duo Mobile, Google Authenticator, etc.),
-        then enter the 6-digit code.
+      <p className="mfa-description">
+        Scan QR code using an authenticator app, then enter the 6-digit code.
       </p>
 
       {loadingSetup && <p>Generating QR code…</p>}
 
       {qrUri && (
-        <div style={{ background: "white", padding: "16px", display: "inline-block" }}>
-          <QRCode value={qrUri} />
+        <div className="qr-container">
+          <div className="qr-box">
+            <QRCode value={qrUri} />
+          </div>
         </div>
       )}
 
-      <form onSubmit={handleConfirm} style={{ marginTop: "16px" }}>
-        <label>6-digit code</label>
+      <form onSubmit={handleConfirm} className="mfa-form">
+        <label className="mfa-label">6-digit code</label>
+
         <input
+          className="mfa-code-input"
           inputMode="numeric"
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder="123456"
           required
         />
-        <button type="submit" disabled={loadingConfirm}>
+
+        <button type="submit" className="mfa-btn" disabled={loadingConfirm}>
           {loadingConfirm ? "Verifying..." : "Confirm"}
         </button>
       </form>
