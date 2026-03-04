@@ -3,7 +3,7 @@
 :root { 
     --magenta:       rgba(170, 0, 186);   /* #AA00BA */
     --magenta_light: rgba(170, 0, 170);   /* #AA00AA */
-    --magenta-a:       rgba(170, 0, 186, 0.3);
+    --magenta-a:     rgba(170, 0, 186, 0.15);
     --purple:        rgba(93, 13, 173);
     --grey:          rgba(248, 249, 251); /* #f8f9fb */
     --blue:          rgba(11, 87, 208);   /* Styled links with this blue */
@@ -55,7 +55,7 @@ nav a, nav button {
 
 .searchbar {
     border-radius: 25px;
-    border: 2px solid black;
+    border: 2px solid var(--magenta);
     background-color: var(--magenta-a); 
     width: 50%;
     height: 2rem;
