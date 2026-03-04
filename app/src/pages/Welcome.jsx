@@ -9,10 +9,9 @@ export default function Welcome() {
         </div>
         )
 
-    return(
+    return (
         <div className="page-center">
             <Card content={welcomeText} />
         </div>
-
     )
 }
