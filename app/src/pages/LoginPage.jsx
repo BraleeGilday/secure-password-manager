@@ -18,9 +18,15 @@ function LoginPage( { setIsLoggedIn } ) {
         setError("")
 
         try {
-            await loginUser(email, password)
+            const data = await loginUser(email, password)
+            
+            if (data?.mfa_required) {
+                navigate("/mfa", { state: { mfaToken: data.mfa_token, email } })
+                return
+            }
             setIsLoggedIn(true)
             navigate("/credentials")
+            
         } catch (err) {
             console.log(err)
             const msg =

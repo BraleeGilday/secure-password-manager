@@ -18,6 +18,8 @@ import VaultOverviewPage from "./pages/VaultOverviewPage.jsx";
 import CredentialEntryPage from "./pages/CredentialEntryPage.jsx";
 import CredentialCreatePage from "./pages/CredentialCreatePage.jsx";
 import CredentialEditPage from "./pages/CredentialEditPage.jsx";
+import MfaVerifyPage from "./pages/MfaVerifyPage.jsx";
+import MfaSettingsPage from "./pages/MfaSettingsPage.jsx";
 
 import "./App.css";
 
@@ -65,6 +67,7 @@ function App() {
             path="/login"
             element={<LoginPage setIsLoggedIn={setIsLoggedIn} />}
           />
+          <Route path="/mfa" element={<MfaVerifyPage setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/register" element={<RegisterPage />} />
 
           {/* User Pages */}
@@ -89,6 +92,14 @@ function App() {
             element={
               <RequireAuth isLoggedIn={isLoggedIn}>
                 <EditDisplayNamePage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile/mfa"
+            element={
+              <RequireAuth isLoggedIn={isLoggedIn}>
+                <MfaSettingsPage />
               </RequireAuth>
             }
           />

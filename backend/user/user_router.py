@@ -32,6 +32,7 @@ from user.user_schema import (
     UserPasswordUpdate,
     UserResponse,
     Token,
+    LoginResponse,
 )
 from config import get_settings
 from models import User
@@ -98,7 +99,7 @@ def register_user(
         created_at=new_user.created_at,
     )
 
-@router.post("/login")
+@router.post("/login", response_model=LoginResponse)
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
@@ -136,9 +137,10 @@ def login_for_access_token(
 
     # If MFA is enabled, require TOTP before issuing access token
     if user.totp_enabled:
+        mfa_token = create_mfa_token(user.email)
         return {
             "mfa_required": True,
-            "mfa_token": create_mfa_token(user.email),
+            "mfa_token": mfa_token,
             "username": user.email,
         }
 
