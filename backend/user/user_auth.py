@@ -86,3 +86,22 @@ def decode_token(token: str) -> dict:
             headers={"WWW-Authenticate": "Bearer"},
         )
     
+
+def get_user_from_mfa_token(
+    mfa_token: str,
+    db: Session,
+):
+    payload = decode_token(mfa_token)
+
+    if payload.get("mfa") is not True:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid MFA token.")
+
+    email = payload.get("sub")
+    if not email:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid MFA token.")
+
+    user = get_user_by_email(db, email=email)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid MFA token.")
+
+    return user

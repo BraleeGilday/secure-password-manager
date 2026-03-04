@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from "../api/auth";
+import { registerUser, loginUser } from "../api/auth";
 
 import FormLink from '../components/FormLink';
 import ErrorText from '../components/ErrorText';
@@ -10,6 +10,7 @@ function RegisterPage() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [displayName, setDisplayName] = useState('')
 
     const [error, setError] = useState("")
@@ -18,14 +19,29 @@ function RegisterPage() {
         e.preventDefault()
         setError("")
 
+        if (password !== confirmPassword) {
+            setError("Passwords do not match.");
+            return;
+        }
+
         try {
-            await registerUser({ email, password, displayName })
-            navigate("/login")
+            // 1) Register
+            await registerUser({ email, password, displayName });
+
+            // 2) Login
+            const data = await loginUser(email, password);
+
+            // 3) Since MFA is required, login should return mfa_required
+            if (data?.mfa_required) {
+            navigate("/mfa/setup", { state: { mfaToken: data.mfa_token, email } });
+            return;
+            }
+
+            // (Fallback - should not happen if MFA required)
+            navigate("/credentials");
         } catch (err) {
-            console.log(err)
-            const msg =
-                err?.response?.data?.detail ||
-                "Registration failed. Please try again.";
+            console.log(err);
+            const msg = err?.response?.data?.detail || "Registration failed. Please try again.";
             setError(msg);
         }
     }
@@ -48,6 +64,13 @@ function RegisterPage() {
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)}
                 required
+            />
+            <label>Confirm password</label>
+            <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
             />
             <label>Display Name (optional)</label>
             <input 

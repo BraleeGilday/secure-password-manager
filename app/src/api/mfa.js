@@ -34,12 +34,7 @@ export async function confirmTotp(code) {
   return response.data;
 }
 
-// OPTIONAL: POST /spm/mfa/totp/disable (if you add it backend)
-export async function disableTotp() {
-  const response = await api.post(
-    "/spm/mfa/totp/disable",
-    null,
-    { headers: getAuthHeaders() }
-  );
-  return response.data;
+export async function fetchEnrollmentStatus(mfaToken) {
+  const res = await api.post("/spm/mfa/totp/enrollment-status", { mfa_token: mfaToken });
+  return res.data; // { totp_enabled, has_secret }
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaRegEnvelope, FaRegIdCard, FaLock, FaRegTrashCan, FaShieldHalved } from "react-icons/fa6";
+import { FaRegEnvelope, FaRegIdCard, FaLock, FaRegTrashCan } from "react-icons/fa6";
 import ProfileCard from "../components/ProfileCard";
 import { fetchMyProfile } from "../api/user";
 
@@ -63,14 +63,6 @@ function UserProfilePage() {
           value={user.display_name || "(none)"}
           linkText="Add or edit name"
           onClick={() => navigate("/profile/name")}
-        />
-
-        <ProfileCard
-          icon={<FaShieldHalved size={28} />}
-          heading="Two-Factor Authentication"
-          value="Manage your login security settings."
-          linkText="Manage MFA"
-          onClick={() => navigate("/profile/mfa")}
         />
 
         <ProfileCard

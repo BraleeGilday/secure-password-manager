@@ -14,11 +14,6 @@ export async function loginUser(email, password) {
     // The Axios POST
     const response = await api.post("/spm/user/login", form);
 
-    // Only store token if we actually received a real access token (MFA disabled)
-    if (response.data?.access_token) {
-      localStorage.setItem("access_token", response.data.access_token);
-    }
-
     return response.data;
 }
 
@@ -32,4 +27,4 @@ export async function registerUser({ email, password, displayName }) {
 
   const response = await api.post("/spm/user/register", payload);
   return response.data; // UserResponse: {id, email, display_name, created_at}
-}
+}localStorage
