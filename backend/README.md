@@ -43,10 +43,14 @@
     sqlalchemy.url = sqlite:///./spm.db
     ```
 
-- Update `alembic/env.py`:
+- Update `alembic/env.py` or `migrations/env.py`:
     ```
     import models
+    from database import POSTGRES_DB_URL
+
     target_metadata = models.Base.metadata
+    # below target_metadata
+    config.set_main_option("sqlalchemy.url", POSTGRES_DB_URL)
     ```
 
 - Generate and apply migrations:
