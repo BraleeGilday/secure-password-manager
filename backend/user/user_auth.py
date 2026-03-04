@@ -1,6 +1,5 @@
 import jwt
 from jwt.exceptions import PyJWTError
-# from starlette.config import Config
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -50,6 +49,11 @@ async def get_current_user(
         email = payload.get("sub")
         if email is None:
             raise credentials_exception
+        
+        # Don't allow MFA tokens to act as access tokens
+        if payload.get("mfa") is True:
+            raise credentials_exception
+
     except PyJWTError:
         raise credentials_exception
 
@@ -57,3 +61,28 @@ async def get_current_user(
     if user is None:
         raise credentials_exception
     return user
+
+
+def create_mfa_token(email: str) -> str:
+    """
+    Short-lived token used ONLY to complete MFA.
+    """
+    return create_access_token(
+        data={"sub": email, "mfa": True},
+        expires_delta=timedelta(minutes=5),
+    )
+
+
+def decode_token(token: str) -> dict:
+    """
+    Decode a JWT and return its payload (or raise HTTPException).
+    """
+    try:
+        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    except PyJWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    

@@ -24,7 +24,7 @@ from user.user_crud import (
     increment_login_attempts,
     reset_login_attempts,
 )
-from user.user_auth import get_current_user, create_access_token
+from user.user_auth import get_current_user, create_access_token, create_mfa_token
 
 from user.user_schema import (
     UserCreate,
@@ -35,6 +35,8 @@ from user.user_schema import (
 )
 from config import get_settings
 from models import User
+
+
 
 router = APIRouter(prefix="/spm/user")
 # config = Config(".env")
@@ -96,7 +98,7 @@ def register_user(
         created_at=new_user.created_at,
     )
 
-@router.post("/login", response_model=Token)
+@router.post("/login")
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
@@ -131,6 +133,16 @@ def login_for_access_token(
     # Correct password
     reset_login_attempts(db, user)
 
+
+    # If MFA is enabled, require TOTP before issuing access token
+    if user.totp_enabled:
+        return {
+            "mfa_required": True,
+            "mfa_token": create_mfa_token(user.email),
+            "username": user.email,
+        }
+
+    # Else, normal login
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires

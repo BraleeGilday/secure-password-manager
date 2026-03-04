@@ -1,4 +1,5 @@
 import pyotp
+import time
 
 # The "app name" shown in the authenticator
 ISSUER_NAME = "Secure Password Manager"
@@ -29,3 +30,9 @@ def verify_totp_code(secret: str, code: str, valid_window: int = 1) -> bool:
     cleaned = "".join(code.split())     # handle pasted "123 456"
     totp = pyotp.TOTP(secret)
     return bool(totp.verify(cleaned, valid_window=valid_window))
+
+def current_totp_step() -> int:
+    """
+    Returns the current TOTP time step (30-second window).
+    """
+    return int(time.time()) // 30
