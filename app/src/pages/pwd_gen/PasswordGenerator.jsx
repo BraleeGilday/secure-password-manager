@@ -24,7 +24,8 @@ export default function PasswordGenerator() {
             {password && (
                 <div className="pwd-box">
                     <span id='pwd-txt'>{password}</span>
-                    <button onClick={handleCopy} className="copy-btn">{copiedText ? 'Copied!': 'Copy'}</button>
+                    {/* copy to clipboard not available on HTTP */}
+                    {/* <button onClick={() => handleCopy(password)} className="copy-btn">{copiedText ? 'Copied!': 'Copy'}</button> */}
                 </div>
             )}
         <div className="spacer">
