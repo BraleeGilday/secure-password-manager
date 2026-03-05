@@ -112,6 +112,7 @@ def create_password(
     return "".join(password)
 
 
+# not currently implemented
 def evaluate_strength(
         length: int,
         symbols: int,

@@ -1,8 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { createPortal } from "react-dom";
 
-// Modal pop up for potentially different things (used currently for password generator)
-// could potential be expaned for alerts (delete, add, error, etc)
+// Modal pop up
 
 // params 
 //  close: setActiveModal(false) function; 
@@ -27,7 +26,7 @@ export default function Modal({close, dialogStyle, content}) {
         <dialog className={dialogStyle ? dialogStyle : ""} onClose={handleClose} ref={dialog}>
             {content}
             <form method="dialog">
-                <button type="button" onClick={handleClose}>Close</button>
+                <button className='modal-btn' type="button" title="close" onClick={handleClose}>x</button>
             </form>
         </dialog>,
         document.getElementById('modal')

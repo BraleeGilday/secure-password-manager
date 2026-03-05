@@ -40,7 +40,7 @@ export default function PasswordGenerator() {
                 value={formData.length}
                 onChange={handleChange}
             />
-            <button type="button" onClick={handleSubmit}>{!password ? 'Generate' : 'Refresh'}</button>
+            <button className="gen-btn" type="button" onClick={handleSubmit}>{!password ? 'Generate' : 'Refresh'}</button>
         </div>
         <div className="spacer">
             <Checkbox label="Symbols" name="has_symbols" checked={formData.has_symbols} onChange={handleChange} />
