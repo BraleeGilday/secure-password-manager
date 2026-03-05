@@ -14,16 +14,49 @@ export const PasswordGeneratorHook = () => {
     mixed_case: true,
   });
 
-  const handleCopy = async () => {
+  const handleCopy = async (copiedPwd) => {
     if (!password) return;
+    if (!copiedPwd) return;
+    
+    // if (navigator.clipboard && window.isSecureContext) {
+    //   try {
+    //     await navigator.clipboard.writeText(password);
+    //     triggerCopySuccess();
+    //     return;
+    //   } catch (err) {
+    //     console.error("Clipboard API failed, trying fallback", err);
+    //   }
+    // }
+    // gemini workaround for HTTP
+    // 2. Fallback for HTTP
     try {
-      await navigator.clipboard.writeText(password);
-      setCopiedText(true);
+      const textArea = document.createElement("textarea");
+      textArea.value = copiedPwd;
+      
+      // Keep it hidden from the user
+      textArea.style.position = "absolute";
+      textArea.style.left = "-9999px";
+      textArea.style.top = "0";
+      
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      const successful = document.execCommand("copy");
+      console.log(textArea.value);
+      document.body.removeChild(textArea);
 
-      setTimeout(() => setCopiedText(false), 2000);
-    } catch (error) {
-      console.error("Failed to copy", error);
+      if (successful) {
+        triggerCopySuccess();
+      }
+    } catch (err) {
+      console.error("Fallback copy failed", err);
     }
+  };
+
+  const triggerCopySuccess = () => {
+    setCopiedText(true);
+    setTimeout(() => setCopiedText(false), 2000);
   };
 
   const handleChange = (event) => {
