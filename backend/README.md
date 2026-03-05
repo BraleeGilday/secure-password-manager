@@ -40,7 +40,7 @@
 
 - Update `alembic.ini`:
     ```
-    sqlalchemy.url = sqlite:///./spm.db
+    sqlalchemy.url = postgresql+psycopg2://USER:PASS@HOST/DB_NAME
     ```
 
 - Update `alembic/env.py` or `migrations/env.py`:
