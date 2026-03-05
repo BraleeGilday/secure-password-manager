@@ -25,7 +25,7 @@ def test_register_user(client):
     assert body["email"] == email
 
 
-def test_login_user_gets_token(client, registered_user):
+def test_login_user_requires_mfa(client, registered_user):
     response = client.post(
         "/spm/user/login",
         data={
@@ -36,8 +36,8 @@ def test_login_user_gets_token(client, registered_user):
     assert response.status_code == 200, response.text
 
     body = response.json()
-    assert "access_token" in body
-    assert body["token_type"] == "bearer"
+    assert body.get("mfa_required") is True
+    assert "mfa_token" in body
     assert body["username"] == registered_user["email"]
 
 
@@ -127,13 +127,16 @@ def test_update_user_password_success(client, registered_user, user_token):
     )
     assert old_login.status_code == 401, old_login.text
 
-    # new password should work
+    # New password should work
     new_login = client.post(
         "/spm/user/login",
         data={"username": registered_user["email"], "password": updated_password},
     )
     assert new_login.status_code == 200, new_login.text
-    assert "access_token" in new_login.json()
+
+    body = new_login.json()
+    assert body.get("mfa_required") is True
+    assert "mfa_token" in body
 
 
 # Test DELETE
