@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, field_validator
-from typing import Optional
+from typing import Literal, Optional, Union
 from datetime import datetime
 
 
@@ -39,8 +39,14 @@ class UserResponse(BaseModel):
     display_name: Optional[str] = None
     created_at: datetime
 
-
 class Token(BaseModel):
     access_token: str
-    token_type: str
-    username: str  # email
+    token_type: Literal["bearer"]
+    username: str   # email
+
+class MfaChallenge(BaseModel):
+    mfa_required: Literal[True] = True
+    mfa_token: str
+    username: str
+
+LoginResponse = Union[Token, MfaChallenge]

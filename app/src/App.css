@@ -621,3 +621,90 @@ button[type="submit"]:hover {
   resize: vertical;     /* prevent sideways drag */
   overflow-y: auto;     /* scroll when too long */
 }
+
+
+/* ---------- MFA Setup Page ---------- */
+
+.mfa-description {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.mfa-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.mfa-form input {
+  font-size: 1.4rem;
+  letter-spacing: 6px;
+  text-align: center;
+  width: 180px;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom: 16px;
+}
+
+.qr-container {
+  text-align: center;
+  margin: 20px auto;
+}
+
+.qr-box {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+
+/* ------ */
+
+.mfa-title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.mfa-description-tight {
+  max-width: 420px;
+  margin: 0 auto 10px auto;
+  margin-bottom: 35px;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+.mfa-email {
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.mfa-label {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+/* Make the code entry feel nicer */
+.mfa-code-input {
+  font-size: 1.6rem;
+  letter-spacing: 8px;
+  text-align: center;
+  width: 220px;
+  padding: 12px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.18);
+  background: rgba(255,255,255,0.8);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  outline: none;
+}
+
+.mfa-code-input:focus {
+  border-color: rgba(128, 0, 128, 0.45);
+  box-shadow: 0 0 0 4px rgba(128, 0, 128, 0.12);
+}
+
+.mfa-form button[type="submit"] {
+  margin: 20px;
+  width: 250px;
+}
