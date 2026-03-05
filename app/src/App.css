@@ -3,7 +3,7 @@
 :root { 
     --magenta:       rgba(170, 0, 186);   /* #AA00BA */
     --magenta_light: rgba(170, 0, 170);   /* #AA00AA */
-    --magenta-a:       rgba(170, 0, 186, 0.3);
+    --magenta-a:     rgba(170, 0, 186, 0.15);
     --purple:        rgba(93, 13, 173);
     --grey:          rgba(248, 249, 251); /* #f8f9fb */
     --blue:          rgba(11, 87, 208);   /* Styled links with this blue */
@@ -55,7 +55,7 @@ nav a, nav button {
 
 .searchbar {
     border-radius: 25px;
-    border: 2px solid black;
+    border: 2px solid var(--magenta);
     background-color: var(--magenta-a); 
     width: 50%;
     height: 2rem;
@@ -94,7 +94,7 @@ main {
 
 .card {
     border-radius: 15px;
-    border: 1.5px solid lightgray;
+    border: 1.5px solid var(--magenta);
     max-width: 25rem;
     max-height: fit-content;
     padding: 1%;
@@ -115,9 +115,32 @@ main {
 
 .pwd-gen-btn {
     width:fit-content;
-    padding: 1%;
-    border: 1px solid var(--magenta);
+    padding: 5px 8px;
+    border: 2px solid var(--magenta);
+    background-color: var(--magenta);
+    color: white;
+    border-radius: 10px;
+    font-weight:700;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.gen-btn {
+    width:fit-content;
+    padding: 4px 8px;
+    border: 2px solid var(--purple);
+    background-color: white;
+    color: var(--purple);
     border-radius: 15px;
+    font-weight:700;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.gen-btn:hover {
+  border: 2px solid var(--purple);
+  background-color: var(--purple);
+  color: white;
 }
 
 .pwd-gen-box {
@@ -148,6 +171,10 @@ main {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+input[type="checkbox"], input[type="range"] {
+  accent-color: var(--purple);
 }
 
 .copy-btn {
@@ -185,6 +212,18 @@ footer {
     height: 5rem;
     text-align:center;
     font-weight: 700;
+}
+
+.modal-btn {
+    width:fit-content;
+    padding: 4px 8px;
+    border: 2px solid black;
+    background-color: white;
+    color: black;
+    border-radius: 25px;
+    font-weight:700;
+    font-size: 0.9rem;
+    cursor: pointer;
 }
 
 /*Form styling adapted from https://www.w3schools.com/css/tryit.asp?filename=trycss_forms*/
