@@ -8,7 +8,6 @@ The project's primary objectives and deliverables include:
 - Secure hosting of the application in the cloud.
 - Documentation and user guides for the application.
 
-
 # docker for local development
 
 ## pre-requisites 

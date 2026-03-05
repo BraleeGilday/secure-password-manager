@@ -32,7 +32,7 @@ export default function Navbar({ isLoggedIn, onLogout }) {
             <nav>
               <div>
                 <Link to="/profile">Profile</Link>
-                <button type="button" onClick={handleLogout}>
+                <button className="logout" type="button" onClick={handleLogout}>
                   Logout
                 </button>
               </div>

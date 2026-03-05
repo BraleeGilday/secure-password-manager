@@ -32,9 +32,3 @@ app.add_middleware(
 app.include_router(credential_router, tags=["credential"])
 app.include_router(user_router, tags=["User"])
 app.include_router(pwd_gen_router.router, tags=["Password"])
-
-
-# to be removed
-@app.get("/")
-async def main():
-    return {"message": "Hello world!"}

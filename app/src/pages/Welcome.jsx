@@ -1,18 +1,18 @@
 import Card from "../components/Card";
 
-import PasswordGeneratorButton from "./pwd_gen/PasswordGeneratorButton";
-
 export default function Welcome() {
-    // pwd gen modal will need to be relocated to appropriate page (credentials)
 
+    let welcomeText = (
+        <div style={{textAlign: "center", padding: "2px"}}>
+            <p>Welcome to Secure Password Manager (SPM)!</p>
+            <p>Safely store your credentials in one place.</p>
+            <p>New users: click <strong>register</strong> to get started.</p>
+        </div>
+        )
 
-    let welcomeText = "Welcome to Secure Password Manager (SPM)! New users: click 'register' to get started."
-
-    return(
+    return (
         <div className="page-center">
             <Card content={welcomeText} />
-            
-            <PasswordGeneratorButton />
         </div>
     )
 }
