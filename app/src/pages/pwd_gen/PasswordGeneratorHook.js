@@ -13,20 +13,20 @@ export const PasswordGeneratorHook = () => {
     has_numbers: true,
     mixed_case: true,
   });
-
+  // feature not usuable with http 
   const handleCopy = async (copiedPwd) => {
     if (!password) return;
     if (!copiedPwd) return;
     
-    // if (navigator.clipboard && window.isSecureContext) {
-    //   try {
-    //     await navigator.clipboard.writeText(password);
-    //     triggerCopySuccess();
-    //     return;
-    //   } catch (err) {
-    //     console.error("Clipboard API failed, trying fallback", err);
-    //   }
-    // }
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(password);
+        triggerCopySuccess();
+        return;
+      } catch (err) {
+        console.error("Clipboard API failed, trying fallback", err);
+      }
+    }
     // gemini workaround for HTTP
     // 2. Fallback for HTTP
     try {
