@@ -1,11 +1,10 @@
 # secure-password-manager
 
-The project's primary objectives and deliverables include:
 - A fully functional web-based password manager that allows users to register, log in/out, and securely store their website credentials in an encrypted vault.
-- Multi-factor authentication when the user logs in with their master password.
-- A password suggestion feature that generates strong, unique passwords based on user input.
+- Multi-factor authentication when the user logs in with their master password. (requires a third-party app like [Duo Mobile](https://duo.com/product/multi-factor-authentication-mfa/duo-mobile-app "duo mobile"))
+- A password generator feature that creates strong, unique passwords based on user input.
 - Robust encryption and security mechanisms to protect user data in the vault.
-- Secure hosting of the application in the cloud.
+- Secure hosting of the application in the cloud (AWS).
 - Documentation and user guides for the application.
 
 # docker for local development
