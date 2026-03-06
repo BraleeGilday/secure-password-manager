@@ -16,7 +16,7 @@
     CRED_ENC_KEY=<your_CRED_ENC_key>
     TIMEOUT=30
     ```
-
+## NB: using docker will mitigate the need to follow the steps below for local development
 
 - navigate to backend:
     ```
